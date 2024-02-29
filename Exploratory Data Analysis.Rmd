@@ -15,6 +15,10 @@ library(tidyverse)
 ```
 
 ```{r}
-dataset <- read_csv("data/Sex_specific_contribution.csv")
+dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";")
+```
+
+```{r}
+dataset
 ```
 
