@@ -17,8 +17,45 @@ library(tidyverse)
 ```{r}
 dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";")
 ```
+First, we look at our dataset and look for null or NA values. 
+```{r}
+glimpse(dataset)
+```
+```{r}
+summary(dataset)
+```
+There appear to be NAs, but are all accurately represented as NAs. 
+
+1. We want to understand the distribution of sexes. 
 
 ```{r}
-dataset
+sex_distribution <- dataset %>% 
+  ggplot(aes(x=Nest_builder, fill=Nest_builder)) + 
+  geom_bar() + 
+  theme(legend.position = "none", axis.text.x = element_text(angle=50, hjust=1))+
+  labs(title="Distribution of Nest Builder Sex", x="Nest Builder", y="Count", fill="Nest_builder")
+
+sex_distribution + scale_fill_brewer(palette="BrBG")
+```
+We see that the most common nest builder is female, followed by both parents, then neither, and the least common (which is very uncommon) is a male nest builder.
+
+2. Do other factors have correlations with the sex of the nest builder?
+
+Let's look at how nest site and nest builder correlate.
+
+```{r}
+builder_vs_site <- dataset %>% 
+  ggplot(aes(x=Nest_builder, fill=Nest_builder)) + 
+  geom_bar() +
+  theme(axis.text.x = element_text(angle=50, hjust=1))+
+  labs(title="Nest Builder Sex by Site", x="Nest Builder", y="Count", fill="Nest_builder") + 
+  facet_wrap(~Nest_site) 
+
+builder_vs_site + scale_fill_brewer(palette="BrBG")
+```
+We see that females tend to take the lead in ground and grass reed nest building. Both parents tend to be more involved in ground holes, ledges, tree bushes, walls, and water, while neither may do work in tree holes. 
+
+```{r}
+
 ```
 
