@@ -12,9 +12,12 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 
 [Dryad](https://doi.org/10.5061/dryad.vhhmgqnsq)
 
-### Group Members and Contact Info
+### Group Members
 
 [Meghana Manepalli](mailto:mmanepalli@ucdavis.edu)
+
 [Valerie Whitfield](mailto:vwhitfield@ucdavis.edu)
+
 [Layla Abedinimehr](mailto:labedinimehr@ucdavis.edu)
+
 [Amina Muhic](mailto:aamuhic@ucdavis.edu)
