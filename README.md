@@ -2,7 +2,7 @@
 
 Sex Specific Contributions to Nest Building 
 
-### Data
+## Data
 
 The data used for this project are from:
 
@@ -12,7 +12,7 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 
 [Dryad](https://doi.org/10.5061/dryad.vhhmgqnsq)
 
-### Group Members
+## Group Members
 
 [Meghana Manepalli](mailto:mmanepalli@ucdavis.edu)
 
