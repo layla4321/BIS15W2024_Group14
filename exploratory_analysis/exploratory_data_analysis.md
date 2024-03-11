@@ -257,13 +257,57 @@ dataset %>%
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
   labs(title="Nest Structure by Builder Sex",
-       x="Site", 
+       x="Structure", 
        y="Count",
        fill="Nest Builder") +
   scale_fill_brewer(palette="BrBG")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+
+
+What about the correlation between the incubating sex and nest-building sex?
+
+
+```r
+dataset %>% 
+  filter(nest_builder != "neither") %>% 
+  ggplot(aes(x=nest_builder, fill=nest_builder)) + 
+  geom_bar(color="black", alpha=0.8) +
+  theme(axis.text.x = element_text(angle=50, hjust=1),
+        plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  labs(title="Nest Builder Sex by Incubating Sex",
+       x=NULL, 
+       y="Count",
+       fill="Nest Builder") + 
+  facet_wrap(~incubating_sex) + 
+  scale_fill_brewer(palette="BrBG")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
+Same concept, different plot:
+
+
+```r
+dataset %>% 
+  filter(nest_builder != "neither") %>% 
+  ggplot(aes(x=incubating_sex, fill=nest_builder)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  theme(axis.text.x = element_text(angle=50, hjust=1),
+        plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  labs(title="Incubating Sex by Sex of Nest-builder",
+       x="Incubating Sex", 
+       y="Count",
+       fill="Nest Builder") +
+  scale_fill_brewer(palette="BrBG")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
 **3. How does the sex of the nest builder correlate with our continuous variables?**
 
@@ -287,11 +331,49 @@ dataset %>%
   scale_fill_brewer(palette="BrBG")
 ```
 
-![](exploratory_data_analysis_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
-4. incubating_sex... nest builder
 
-5. length_breeding...  nest builder 
+Nest builder vs. length breeding season
 
-6. latitude_mean...  nest builder
-_The code/plots for the other continuous variables would be similar._
+
+```r
+dataset %>% 
+  filter(nest_builder != "neither") %>%
+  filter(length_breeding != "NA") %>% 
+  ggplot(aes(x=nest_builder, y=length_breeding, 
+             fill=nest_builder)) +
+  geom_boxplot(alpha=0.8) +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  labs(title="Mean Clutch Size by Builder Sex",
+       x=NULL, 
+       y="Length of Breeding Season (months)",
+       fill="Nest Builder") +
+  scale_fill_brewer(palette="BrBG")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+
+Nest builder vs. mean breeding latitude
+
+
+```r
+dataset %>% 
+  filter(nest_builder != "neither") %>%
+  filter(latitude_mean != "NA") %>% 
+  ggplot(aes(x=nest_builder, y=latitude_mean, 
+             fill=nest_builder)) +
+  geom_boxplot(alpha=0.8) +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  labs(title="Breeding Latitude by Builder Sex",
+       x=NULL, 
+       y="Mean Breeding Latitude",
+       fill="Nest Builder") +
+  scale_fill_brewer(palette="BrBG")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
