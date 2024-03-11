@@ -379,3 +379,135 @@ dataset %>%
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+
+## More Exploration
+
+
+```r
+na.omit(dataset) %>%
+ggplot(aes(x = latitude_mean, y = clutch_size_mean)) +
+  geom_density_2d() +
+  labs(title="Mean Latitude vs. Mean Clutch Size",
+       x="Mean Latitude",
+       y="Mean Clutch Size") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+
+
+```r
+na.omit(dataset) %>%
+  ggplot(aes(x=latitude_mean, y=clutch_size_mean)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color="red") + 
+  labs(x="Mean Latitude", 
+       y="Mean Clutch Size", 
+       title="Clutch Size vs. Latitude") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+
+
+```r
+na.omit(dataset) %>%
+  filter(nest_builder != "neither") %>%
+  ggplot(aes(x = latitude_mean, y = clutch_size_mean, color = nest_structure)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, aes(group = nest_structure)) + # Grouping for separate regression lines
+  labs(x="Latitude Mean", 
+       y="Mean Clutch Size", 
+       title="Clutch Size vs. Latitude by Nest Structure") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_color_manual(values = c("cup" = "blue", "platform" = "red", "dome"="green", "no nest"="purple")) # Adjust keys and colors
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+
+
+```r
+na.omit(dataset) %>%
+  ggplot(aes(x = latitude_mean, y = length_breeding)) +
+  geom_point() +
+  labs(title="Breeding Season Length Across Latitudes",
+       x="Mean Latitude",
+       y="Length Breeding Season") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+
+
+```r
+na.omit(dataset) %>%
+  ggplot(aes(x = latitude_mean, y = length_breeding)) +
+  geom_point() +  
+  geom_smooth(method = "loess", color = "blue") +  
+  labs(title="Breeding Season Length Across Latitudes",
+       x="Mean Latitude",
+       y="Length Breeding Season") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+
+
+```r
+na.omit(dataset) %>%
+  filter(nest_builder != "neither") %>%
+  ggplot( aes(x = nest_structure)) +
+  geom_bar(aes(fill = nest_structure), show.legend = FALSE,
+           color="black", alpha=0.8) +
+  labs(title ="Nest Structure Distribution", 
+       x="Nest Structure", 
+       y="Count") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette="BrBG")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+
+
+```r
+na.omit(dataset) %>%
+ ggplot(aes(x = clutch_size_mean)) +
+  geom_histogram(aes(fill = incubating_sex), bins = 30, 
+                 alpha = 0.8, position = "identity") +
+  facet_wrap(~nest_builder) +
+  labs(title="Distribution of Clutch Size Mean by Incubating Sex and Nest Builder",
+       x = "Clutch Size Mean",
+       y = "Frequency",
+       fill="Incubating Sex") +
+  scale_fill_brewer(palette = "BrBG") + #might want to consider a new palette
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+
