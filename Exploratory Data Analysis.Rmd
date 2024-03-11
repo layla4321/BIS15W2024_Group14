@@ -135,4 +135,9 @@ dataset %>%
   scale_fill_brewer(palette="BrBG")
 ```
 
+4. incubating_sex... nest builder
+
+5. length_breeding...  nest builder 
+
+6. latitude_mean...  nest builder
 _The code/plots for the other continuous variables would be similar._

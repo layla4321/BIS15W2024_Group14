@@ -134,7 +134,7 @@ sex_distribution <- dataset %>%
 sex_distribution + scale_fill_brewer(palette="BrBG")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](extra_plots__files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 We see that the most common nest builder is female, followed by both parents, then neither, and the least common (which is very uncommon) is a male nest builder.
 
 Who are the male nest builders?
@@ -181,7 +181,7 @@ builder_vs_site <- dataset %>%
 builder_vs_site + scale_fill_brewer(palette="BrBG")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](extra_plots__files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 We see that females tend to take the lead in ground and grass reed nest building. Both parents tend to be more involved in ground holes, ledges, tree bushes, walls, and water, while neither may do work in tree holes. 
 
 Here's another way of visualizing the same info:
@@ -198,7 +198,7 @@ dataset %>%
   scale_fill_brewer(palette="BrBG")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](extra_plots__files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 We'll also take a look at how nest structure and nest builder correlate.
 
@@ -217,7 +217,7 @@ builder_vs_type <- dataset %>%
 builder_vs_type + scale_fill_brewer(palette="BrBG")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](extra_plots__files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 Alternatively:
 
@@ -234,7 +234,7 @@ dataset %>%
   scale_fill_brewer(palette="BrBG")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+![](extra_plots__files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 3. How does the sex of the nest builder correlate with our continuous variables?
 
@@ -254,11 +254,163 @@ dataset %>%
   scale_fill_brewer(palette="BrBG")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+![](extra_plots__files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
 4. incubating_sex... nest builder
 
-5. length_breeding...  nest builder 
+```r
+na.omit(dataset) %>%
+ggplot(aes(x = latitude_mean, y = clutch_size_mean)) +
+  geom_density_2d() +
+  labs(x = "Latitude (Mean)", y = "Clutch Size (Mean)")
+```
 
-6. latitude_mean...  nest builder
+![](extra_plots__files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+--- 
+
+4. lets see how clutch sizes is related to latitude and whether nest types are related to that. 
+
+
+```r
+na.omit(dataset) %>%
+   filter(nest_builder != "neither") %>%
+ggplot( aes(x = latitude_mean, y = clutch_size_mean, color = nest_structure)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, aes(group = nest_structure)) + # Grouping for separate regression lines
+  labs(x = "Latitude Mean", y = "Mean Clutch Size", title = "Clutch Size vs. Latitude by Nest Structure") +
+  theme_minimal() +
+  scale_color_manual(values = c("cup" = "blue", "platform" = "red", "dome"="green", "no nest"="purple")) # Adjust keys and colors
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+
+5. Analyze clutch size mean by latitude mean while considering the sex-based role in nest building
+
+
+```r
+na.omit(dataset) %>%
+   filter(nest_builder != "neither") %>%
+ggplot( aes(x=as.factor(nest_builder), y=clutch_size_mean)) +
+  geom_boxplot() +
+  facet_wrap(~nest_builder) +
+  labs(title="Clutch Size by Nest Builder", x="Nest Builder", y="Clutch Size Mean")
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+
+5. Now, we want to explore to see if different latitudes have any effects on breeding season
+
+
+```r
+na.omit(dataset) %>%
+   filter(nest_builder != "neither") %>%
+ggplot( aes(x = latitude_mean, y = length_breeding)) +
+  geom_point() +  
+  geom_smooth(method = "loess", color = "blue") +  
+  labs(title = "Breeding Season Length Across Latitudes",
+       x = "Latitude Mean",
+       y = "Breeding Season Length") +
+  theme_minimal()
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+6. Now, lets see nest structure distribution
+
+
+```r
+na.omit(dataset) %>%
+   filter(nest_builder != "neither") %>%
+ggplot( aes(x = nest_structure)) +
+  geom_bar(aes(fill = nest_structure), show.legend = FALSE) +
+  labs(title = "Nest Structure Distribution", x = "Nest Structure", y = "Count") +
+  theme_minimal()
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+7. Let's see if different sexes have a preference in the type of nest they build
+
+
+```r
+na.omit(dataset) %>%
+   filter(nest_builder != "neither") %>%
+ggplot( aes(x = nest_structure, fill = nest_builder)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Nest Structure Distribution by Sex", x = "Nest Structure", y = "Count") +
+  theme_minimal()
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+
+7. Let's check whether clutch size has anything to do with the sex of the parent that builds the nest. That tells us about the fitness
+
+
+```r
+na.omit(dataset) %>%
+   filter(nest_builder != "neither") %>%
+ggplot( aes(x = nest_builder, y = clutch_size_mean, fill = nest_builder)) +
+  geom_boxplot() +
+  labs(title = "Clutch Size by Nest Builder Sex", x = "Nest Builder Sex", y = "Mean Clutch Size") +
+  theme_minimal()
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+8. breeding season length by latitude
+
+```r
+na.omit(dataset) %>%
+   filter(nest_builder != "neither") %>%
+ggplot( aes(x = nest_builder, y = length_breeding, fill = nest_builder)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Breeding Season Length by Nest Builder",
+       x = "Nest Builder",
+       y = "Breeding Season Length (months)") +
+  scale_fill_brewer(palette = "Set1")
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+9. The study checked:"species in which females lay larger clutch sizes and incubate eggs alone are more likely to have nests built by females alone"
+
+
+```r
+na.omit(dataset) %>%
+ ggplot(aes(x = clutch_size_mean)) +
+  geom_histogram(aes(fill = incubating_sex), bins = 30, alpha = 0.6, position = "identity") +
+  facet_wrap(~nest_builder) +
+  labs(title = "Distribution of Clutch Size Mean by Incubating Sex and Nest Builder",
+       x = "Clutch Size Mean",
+       y = "Frequency") +
+  scale_fill_brewer(palette = "Set1") +
+  theme_minimal()
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+10. The study also checked whether: " sex-specific nest building contributions were predictably related to nest site and structure, as species in which females built nests alone were more likely to have open cup nests relative to enclosed, domed nests of species in which both parents build."
+
+
+```r
+na.omit(dataset) %>%
+  filter(nest_structure %in% c('cup', 'dome')) %>%
+  ggplot(aes(x = nest_builder, fill = nest_structure)) +
+  geom_bar(position = "dodge") +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(title = "Nest Structure by Builder Contribution",
+       x = "Nest Builder",
+       y = "Percentage of Nest Types",
+       fill = "Nest Structure") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2")
+```
+
+![](extra_plots__files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+
+
 _The code/plots for the other continuous variables would be similar._
