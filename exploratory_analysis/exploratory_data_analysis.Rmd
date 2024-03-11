@@ -209,7 +209,7 @@ dataset %>%
 ```
 
 
-Nest builder vs. length breeding season
+Nest builder vs. length breeding season:
 
 ```{r}
 dataset %>% 
@@ -228,7 +228,7 @@ dataset %>%
   scale_fill_brewer(palette="BrBG")
 ```
 
-Nest builder vs. mean breeding latitude
+Nest builder vs. mean breeding latitude:
 
 ```{r}
 dataset %>% 

@@ -336,7 +336,7 @@ dataset %>%
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 
-Nest builder vs. length breeding season
+Nest builder vs. length breeding season:
 
 
 ```r
@@ -358,7 +358,7 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
 
-Nest builder vs. mean breeding latitude
+Nest builder vs. mean breeding latitude:
 
 
 ```r
