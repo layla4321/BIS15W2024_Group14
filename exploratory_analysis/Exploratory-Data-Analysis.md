@@ -8,6 +8,8 @@ date: "2024-02-29"
 
 
 
+## Libraries
+
 
 ```r
 library(tidyverse)
@@ -15,10 +17,10 @@ library(tidyverse)
 
 ```
 ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.4     ✔ readr     2.1.4
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
 ## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-## ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 ## ✔ purrr     1.0.2     
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
@@ -40,9 +42,11 @@ library(janitor)
 ##     chisq.test, fisher.test
 ```
 
+## Data
+
 
 ```r
-dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
+dataset <- read_delim("../data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
 ```
 
 ```
@@ -55,7 +59,10 @@ dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";") %>% clean
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
-First, we look at our dataset and look for null or NA values. 
+
+
+**First, we look at the structure of our dataset and look for null or NA values.**
+
 
 ```r
 glimpse(dataset)
@@ -73,6 +80,7 @@ glimpse(dataset)
 ## $ length_breeding  <dbl> 4, 3, 6, 5, 4, 6, 4, NA, 6, 4, 4, 5, 6, 5, 6, 6, 5, 7…
 ## $ latitude_mean    <dbl> NA, 44.5, 52.5, 49.0, 35.5, 46.0, 47.0, NA, 59.5, 38.…
 ```
+
 
 ```r
 summary(dataset)
@@ -97,6 +105,7 @@ summary(dataset)
 ##  NA's   :8                           NA's   :20       NA's   :8
 ```
 
+
 ```r
 miss_var_summary(dataset)
 ```
@@ -117,25 +126,30 @@ miss_var_summary(dataset)
 
 There appear to be NAs, but are all accurately represented as NAs. 
 
-1. We want to understand the distribution of sexes. 
+## Nest building
+
+**1. We want to understand the distribution of sexes.** 
 
 
 ```r
-sex_distribution <- dataset %>% 
+dataset %>% 
   ggplot(aes(x=nest_builder, fill=nest_builder)) + 
-  geom_bar() + 
+  geom_bar(color="black", alpha=0.8) + 
   theme(legend.position = "none",
-        axis.text.x = element_text(angle=50, hjust=1)) +
+        axis.text.x = element_text(angle=50, hjust=1),
+        plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
   labs(title="Distribution of Nest Builder Sex",
        x="Nest Builder", 
        y="Count",
-       fill="Nest_builder")
-
-sex_distribution + scale_fill_brewer(palette="BrBG")
+       fill="Nest_builder") + 
+  scale_fill_brewer(palette="BrBG")
 ```
 
 ![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
-We see that the most common nest builder is female, followed by both parents, then neither, and the least common (which is very uncommon) is a male nest builder.
+
+We see that the most common nest builder is female, followed by both parents, then neither, and the least common (which is very uncommon) is a male nest builder. Since the 'neither' category won't tell us much about patterns for nest building, we can filter it from further analysis.
 
 Who are the male nest builders?
 
@@ -162,35 +176,44 @@ dataset %>%
 ## 11 Vanellus_spinosus       male
 ```
 
-2. Do other factors have correlations with the sex of the nest builder?
+**2. Do other factors have correlations with the sex of the nest builder?**
 
 Let's look at how nest site and nest builder correlate.
 
 
 ```r
-builder_vs_site <- dataset %>% 
+dataset %>%
+  filter(nest_builder != "neither") %>% 
   ggplot(aes(x=nest_builder, fill=nest_builder)) + 
-  geom_bar() +
-  theme(axis.text.x = element_text(angle=50, hjust=1)) +
+  geom_bar(color="black", alpha=0.8) +
+  theme(axis.text.x = element_text(angle=50, hjust=1),
+        plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
   labs(title="Nest Builder Sex by Site",
        x="Nest Builder", 
        y="Count",
-       fill="Nest_builder") + 
-  facet_wrap(~nest_site)
-
-builder_vs_site + scale_fill_brewer(palette="BrBG")
+       fill="Nest Builder") + 
+  facet_wrap(~nest_site) + 
+  scale_fill_brewer(palette="BrBG")
 ```
 
 ![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+
 We see that females tend to take the lead in ground and grass reed nest building. Both parents tend to be more involved in ground holes, ledges, tree bushes, walls, and water, while neither may do work in tree holes. 
 
 Here's another way of visualizing the same info:
 
+
 ```r
 dataset %>% 
+  filter(nest_builder != "neither") %>% 
   ggplot(aes(x=nest_site, fill=nest_builder)) +
-  geom_bar(position = "dodge") +
-  theme(axis.text.x = element_text(angle=50, hjust=1)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  theme(axis.text.x = element_text(angle=50, hjust=1),
+        plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
   labs(title="Nest Site by Sex of Builder",
        x="Site", 
        y="Count",
@@ -202,19 +225,22 @@ dataset %>%
 
 We'll also take a look at how nest structure and nest builder correlate.
 
+
 ```r
-builder_vs_type <- dataset %>% 
+dataset %>% 
   filter(nest_builder != "neither") %>% 
   ggplot(aes(x=nest_builder, fill=nest_builder)) + 
-  geom_bar(color="black") +
-  theme(axis.text.x = element_text(angle=50, hjust=1)) +
+  geom_bar(color="black", alpha=0.8) +
+  theme(axis.text.x = element_text(angle=50, hjust=1),
+        plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
   labs(title="Nest Builder Sex by Nest Structure",
        x=NULL, 
        y="Count",
        fill="Nest Builder") + 
-  facet_wrap(~nest_structure)
-
-builder_vs_type + scale_fill_brewer(palette="BrBG")
+  facet_wrap(~nest_structure) + 
+  scale_fill_brewer(palette="BrBG")
 ```
 
 ![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
@@ -225,8 +251,11 @@ Alternatively:
 dataset %>% 
   filter(nest_builder != "neither") %>% 
   ggplot(aes(x=nest_structure, fill=nest_builder)) +
-  geom_bar(position = "dodge", color="black") +
-  theme(axis.text.x = element_text(angle=50, hjust=1)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  theme(axis.text.x = element_text(angle=50, hjust=1),
+        plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
   labs(title="Nest Structure by Builder Sex",
        x="Site", 
        y="Count",
@@ -236,9 +265,10 @@ dataset %>%
 
 ![](Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
-3. How does the sex of the nest builder correlate with our continuous variables?
+**3. How does the sex of the nest builder correlate with our continuous variables?**
 
 Nest builder and mean clutch size:
+
 
 ```r
 dataset %>% 
@@ -246,7 +276,10 @@ dataset %>%
   filter(clutch_size_mean != "NA") %>% 
   ggplot(aes(x=nest_builder, y=clutch_size_mean, 
              fill=nest_builder)) +
-  geom_boxplot() +
+  geom_boxplot(alpha=0.8) +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
   labs(title="Mean Clutch Size by Builder Sex",
        x=NULL, 
        y="Mean Clutch Size",
