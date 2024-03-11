@@ -1,6 +1,8 @@
-# BIS15W2024_Group14
+# BIS15W2024 Group #14
 
-Sex Specific Contributions to Nest Building 
+**Sex specific contributions to nest building:** Are there any patterns of sex-specific
+contributions to nest building in birds? Can certain variables be used to predict the
+sex of the nest-building parent? Which birds deviate from these patterns?
 
 ## Data
 
