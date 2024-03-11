@@ -17,6 +17,7 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 ## Repository
 
 `data`: Dataframe used for the project
+
 `exploratory_analysis`: Initial exploration of the data; examining correlations between
 the variables
 
