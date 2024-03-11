@@ -347,7 +347,7 @@ dataset %>%
   theme(plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Mean Clutch Size by Builder Sex",
+  labs(title="Length of Breeding Season by Builder Sex",
        x=NULL, 
        y="Length of Breeding Season (months)",
        fill="Nest Builder") +
