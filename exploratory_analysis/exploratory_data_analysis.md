@@ -272,6 +272,7 @@ What about the correlation between the incubating sex and nest-building sex?
 ```r
 dataset %>% 
   filter(nest_builder != "neither") %>% 
+  filter(incubating_sex != "NA") %>% 
   ggplot(aes(x=nest_builder, fill=nest_builder)) + 
   geom_bar(color="black", alpha=0.8) +
   theme(axis.text.x = element_text(angle=50, hjust=1),
@@ -294,6 +295,7 @@ Same concept, different plot:
 ```r
 dataset %>% 
   filter(nest_builder != "neither") %>% 
+  filter(incubating_sex != "NA") %>% 
   ggplot(aes(x=incubating_sex, fill=nest_builder)) +
   geom_bar(position = "dodge", color="black", alpha=0.8) +
   theme(axis.text.x = element_text(angle=50, hjust=1),
