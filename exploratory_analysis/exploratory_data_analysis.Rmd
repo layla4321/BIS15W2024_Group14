@@ -292,6 +292,7 @@ na.omit(dataset) %>%
 na.omit(dataset) %>%
   ggplot(aes(x = latitude_mean, y = length_breeding)) +
   geom_point() +
+  geom_smooth(method="lm", se=F) +
   labs(title="Breeding Season Length Across Latitudes",
        x="Mean Latitude",
        y="Length Breeding Season") +
