@@ -28,9 +28,13 @@ the variables
 ## Group Members
 
 [Meghana Manepalli](mailto:mmanepalli@ucdavis.edu)
++ Exploratory data analysis and plotting
 
 [Valerie Whitfield](mailto:vwhitfield@ucdavis.edu)
++ ShinyApp building
 
 [Layla Abedinimehr](mailto:labedinimehr@ucdavis.edu)
++ Exploratory data analysis and plotting
 
 [Amina Muhic](mailto:aamuhic@ucdavis.edu)
++ Aesthetics, presentation, repository organization
