@@ -14,15 +14,20 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(naniar)
 library(janitor)
+library(shiny)
 ```
 
 ```{r}
 dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
 ```
 
-#### Add this to the exploratory data analysis file later 
-How many genuses are there?
-240 genuses, 100 genuses with 2+ species, 58 genuses with 3+ species, 35 with 4+
+
+```{r}
+dataset <- dataset %>% 
+  separate(species, into= c("genus", "species"), sep = "_")
+head(dataset)
+```
+
 ```{r}
 large_genuses_data <- dataset %>% 
   group_by(genus) %>% 
@@ -32,145 +37,9 @@ large_genuses_data <- dataset %>%
 large_genuses <- large_genuses_data$genus
 ```
 
-### Data exploration from other file
-
-First, we look at our dataset and look for null or NA values. 
-```{r}
-glimpse(dataset)
-```
-```{r}
-summary(dataset)
-```
-```{r}
-miss_var_summary(dataset)
-```
-There appear to be NAs, but are all accurately represented as NAs. 
-
-Also, before we proceed, we want to distinguish between genus and species:
-```{r}
-dataset <- dataset %>% 
-  separate(species, into= c("genus", "species"), sep = "_")
-head(dataset)
-```
 
 
 
-1. We want to understand the distribution of sexes. 
-
-```{r}
-sex_distribution <- dataset %>% 
-  ggplot(aes(x=nest_builder, fill=nest_builder)) + 
-  geom_bar() + 
-  theme(legend.position = "none",
-        axis.text.x = element_text(angle=50, hjust=1)) +
-  labs(title="Distribution of Nest Builder Sex",
-       x="Nest Builder", 
-       y="Count",
-       fill="Nest_builder")
-
-sex_distribution + scale_fill_brewer(palette="BrBG")
-```
-We see that the most common nest builder is female, followed by both parents, then neither, and the least common (which is very uncommon) is a male nest builder.
-
-Who are the male nest builders?
-```{r}
-dataset %>% 
-  select(genus, species, nest_builder) %>% 
-  filter(nest_builder == "male")
-```
-
-2. Do other factors have correlations with the sex of the nest builder?
-
-Let's look at how nest site and nest builder correlate.
-
-```{r}
-builder_vs_site <- dataset %>% 
-  ggplot(aes(x=nest_builder, fill=nest_builder)) + 
-  geom_bar() +
-  theme(axis.text.x = element_text(angle=50, hjust=1)) +
-  labs(title="Nest Builder Sex by Site",
-       x="Nest Builder", 
-       y="Count",
-       fill="Nest_builder") + 
-  facet_wrap(~nest_site)
-
-builder_vs_site + scale_fill_brewer(palette="BrBG")
-```
-We see that females tend to take the lead in ground and grass reed nest building. Both parents tend to be more involved in ground holes, ledges, tree bushes, walls, and water, while neither may do work in tree holes. 
-
-Here's another way of visualizing the same info:
-```{r}
-dataset %>% 
-  ggplot(aes(x=nest_site, fill=nest_builder)) +
-  geom_bar(position = "dodge") +
-  theme(axis.text.x = element_text(angle=50, hjust=1)) +
-  labs(title="Nest Site by Sex of Builder",
-       x="Site", 
-       y="Count",
-       fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
-```
-
-We'll also take a look at how nest structure and nest builder correlate.
-```{r}
-builder_vs_type <- dataset %>% 
-  filter(nest_builder != "neither") %>% 
-  ggplot(aes(x=nest_builder, fill=nest_builder)) + 
-  geom_bar(color="black") +
-  theme(axis.text.x = element_text(angle=50, hjust=1)) +
-  labs(title="Nest Builder Sex by Nest Structure",
-       x=NULL, 
-       y="Count",
-       fill="Nest Builder") + 
-  facet_wrap(~nest_structure)
-
-builder_vs_type + scale_fill_brewer(palette="BrBG")
-```
-
-Alternatively:
-```{r}
-dataset %>% 
-  filter(nest_builder != "neither") %>% 
-  ggplot(aes(x=nest_structure, fill=nest_builder)) +
-  geom_bar(position = "dodge", color="black") +
-  theme(axis.text.x = element_text(angle=50, hjust=1)) +
-  labs(title="Nest Structure by Builder Sex",
-       x="Site", 
-       y="Count",
-       fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
-```
-
-3. How does the sex of the nest builder correlate with our continuous variables?
-
-Nest builder and mean clutch size:
-```{r}
-dataset %>% 
-  filter(nest_builder != "neither") %>%
-  filter(clutch_size_mean != "NA") %>% 
-  ggplot(aes(x=nest_builder, y=clutch_size_mean, 
-             fill=nest_builder)) +
-  geom_boxplot() +
-  labs(title="Mean Clutch Size by Builder Sex",
-       x=NULL, 
-       y="Mean Clutch Size",
-       fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
-```
-
-_The code/plots for the other continuous variables would be similar._
-
-### App making
-
-1. We want to understand the distribution of sexes of nest builders (see above)
-
-2. Do other factors have correlations with the sex of the nest builder?
-
-Let's look at how nest site and nest builder correlate.
-
-We'll also take a look at how nest structure and nest builder correlate. (and vice versa)
-
-3. How does the sex of the nest builder correlate with our continuous variables? (only mean clutch size represented above)
 
 #### App structure
 Plot distribution of nest_builder (sex): dropdown of group by all, or by each of the variables
@@ -182,47 +51,6 @@ Free exploration section!
 1-categorical 1-continuous plot, dropdowns for each variable
 2-continuous plot, dropdowns for each variable, dropdown for coloring
 
-```{r, eval=F, echo=T}
-ui <- fluidPage(    
-  
-  titlePanel("Analysis of Nest Builder Sex Distribution"), # give the page a title
-  
-  # generate a row with a sidebar
-  sidebarLayout(      
-    
-  # define the sidebar with one input
-  sidebarPanel(
-  selectInput("variable", "Select variable:", choices=c("nest_site", "nest_structure", "incubating_sex"), selected = "nest_site"),
-              hr()),
-    
-  # create a spot for the barplot
-  mainPanel(
-  plotOutput("nest_builder_categoricalPlot"))
-  )
-  )
-
-  # define a server for the Shiny app
-  server <- function(input, output, session) {
-  
-  # this stops the app upon closing
-  session$onSessionEnded(stopApp)
-      
-  # fill in the spot we created for a plot
-  output$nest_builder_categoricalPlot <- renderPlot({
-
-    dataset %>% 
-      
-      ggplot(aes_string(x="nest_builder", fill=input$variable))+
-      geom_bar(position = "dodge") +
-      theme(axis.text.x = element_text(angle=50, hjust=1)) +
-      labs(x="Sex", 
-       y="Count", fill="Fill by") +
-      scale_fill_brewer(palette="BrBG")
-  })
-  }
-
-shinyApp(ui, server)
-```
 #### Bigger badder app
 
 ```{r}
@@ -234,6 +62,7 @@ ui <- fluidPage(
       selectInput("master_input", "Select Plot Type",
                   choices = c("Plot distribution of nest_builder (sex)", 
                               "Plot distribution of nest_builder (sex) against continuous variables",
+                              "Trends in breeding season length (and other continuous variables)",
                               "Differences between species of a genus"))
     ),
     
@@ -263,9 +92,12 @@ server <- function(input, output, session) {
       tagList(
         selectInput("y_var", "Select y variable:", choices=c("clutch_size_mean", "length_breeding", "latitude_mean"), selected = "clutch_size_mean")
       )
+    } else if (plot_type == "Trends in breeding season length (and other continuous variables)") {
+      tagList(
+        selectInput("y_var", "Select y variable:", choices=c("clutch_size_mean", "latitude_mean"), selected = "latitude_mean")
+      )
     } else if (plot_type == "Differences between species of a genus") {
       tagList(
-        selectInput("genus", "Select genus:", choices=large_genuses, selected = "Sylvia"),
         selectInput("y_var", "Select y variable:", choices=c("nest_builder", "nest_site", "nest_structure", "incubating_sex", "clutch_size_mean", "length_breeding", "latitude_mean"), selected = "nest_builder")
       )
     }
@@ -280,24 +112,33 @@ server <- function(input, output, session) {
         theme(axis.text.x = element_text(angle=50, hjust=1)) +
         labs(x="Sex", 
          y="Count", fill="Fill by") +
-        scale_fill_brewer(palette="BrBG")
+        scale_fill_brewer(palette="YlGnBu")
     } else if (plot_type == "Plot distribution of nest_builder (sex) against continuous variables") {
       dataset %>%
-        ggplot(aes_string(x="nest_builder", y=input$y_var))+
+        ggplot(aes_string(x="nest_builder", y=input$y_var, fill="nest_builder"))+
         geom_boxplot() +
         theme(axis.text.x = element_text(angle=50, hjust=1)) +
         labs(x="Sex", 
          y=input$y_var) +
-        scale_fill_brewer(palette="BrBG")
+        scale_fill_brewer(palette="YlGnBu")
+    } else if (plot_type == "Trends in breeding season length (and other continuous variables)") {
+      dataset %>%
+        ggplot(aes_string(x="length_breeding", y=input$y_var))+
+        geom_point() +
+        geom_smooth(method = "lm", se = FALSE)+ #, aes(group = nest_structure))+
+        theme(axis.text.x = element_text(angle=50, hjust=1)) +
+        labs(x="Length of Breeding Season", 
+         y=input$y_var) +
+        scale_fill_brewer(palette="YlGnBu")
     } else if (plot_type == "Differences between species of a genus") {
-      genus_filtered_dataset <- filter(dataset, genus == input$genus)
-      p <- ggplot(genus_filtered_dataset, aes_string(x="species", y=input$y_var))+
+      genus_filtered_dataset <- filter(dataset, genus %in% large_genuses)
+      p <- ggplot(genus_filtered_dataset, aes_string(x="genus", y=input$y_var))+
           theme(axis.text.x = element_text(angle=50, hjust=1)) +
-          labs(x="Species", y=input$y_var)
+          labs(x="Genus", y=input$y_var)
       if (input$y_var %in% c("nest_builder", "nest_site", "nest_structure", "incubating_sex")) {
-        p <- p+geom_count()
+        p <- p+geom_count(color="#7fcdbb")
       } else if (input$y_var %in% c("clutch_size_mean", "length_breeding", "latitude_mean")) {
-        p <- p+geom_col(fill="#a6611a")
+        p <- p+geom_boxplot(fill="#7fcdbb")
       }
       p  
     }
