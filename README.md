@@ -21,6 +21,10 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 `exploratory_analysis`: Initial exploration of the data; examining correlations between
 the variables
 
+## Presentation
+
+[Link](https://docs.google.com/presentation/d/1TQ1KQjKxCtga6xTeCVBefpFIpA_n7ZBVaJ4ULldGosk/edit?usp=sharing)
+
 ## Group Members
 
 [Meghana Manepalli](mailto:mmanepalli@ucdavis.edu)
