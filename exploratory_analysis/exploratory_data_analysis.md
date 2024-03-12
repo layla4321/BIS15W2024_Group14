@@ -140,11 +140,10 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Distribution of Nest Builder Sex",
+  labs(title="Distribution of Nest-Builder Sex",
        x="Nest Builder", 
-       y="Count",
-       fill="Nest_builder") + 
-  scale_fill_brewer(palette="BrBG")
+       y="Count") + 
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
@@ -190,19 +189,19 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Builder Sex by Site",
+  labs(title="Nest-Builder Sex by Site",
        x="Nest Builder", 
        y="Count",
        fill="Nest Builder") + 
   facet_wrap(~nest_site) + 
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 We see that females tend to take the lead in ground and grass reed nest building. Both parents tend to be more involved in ground holes, ledges, tree bushes, walls, and water, while neither may do work in tree holes. 
 
-Here's another way of visualizing the same info:
+Here's another way of visualizing similar info:
 
 
 ```r
@@ -214,11 +213,11 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Site by Sex of Builder",
+  labs(title="Nest Site by Nest-Builder Sex",
        x="Site", 
        y="Count",
        fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
@@ -235,12 +234,12 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Builder Sex by Nest Structure",
+  labs(title="Nest-Builder Sex by Nest Structure",
        x=NULL, 
        y="Count",
        fill="Nest Builder") + 
   facet_wrap(~nest_structure) + 
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
@@ -256,11 +255,11 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Structure by Builder Sex",
+  labs(title="Nest Structure by Nest-Builder Sex",
        x="Structure", 
        y="Count",
        fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
@@ -279,12 +278,12 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Builder Sex by Incubating Sex",
+  labs(title="Nest-Builder Sex by Incubating Sex",
        x=NULL, 
        y="Count",
        fill="Nest Builder") + 
   facet_wrap(~incubating_sex) + 
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
@@ -302,11 +301,11 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Incubating Sex by Sex of Nest-builder",
+  labs(title="Incubating Sex by Nest-Builder Sex",
        x="Incubating Sex", 
        y="Count",
        fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
@@ -330,7 +329,7 @@ dataset %>%
        x=NULL, 
        y="Mean Clutch Size",
        fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
@@ -353,7 +352,7 @@ dataset %>%
        x=NULL, 
        y="Length of Breeding Season (months)",
        fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
@@ -375,7 +374,7 @@ dataset %>%
        x=NULL, 
        y="Mean Breeding Latitude",
        fill="Nest Builder") +
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
@@ -430,7 +429,7 @@ na.omit(dataset) %>%
   theme(plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  scale_color_manual(values = c("cup" = "blue", "platform" = "red", "dome"="green", "no nest"="purple")) # Adjust keys and colors
+  scale_color_brewer(palette = "YlGnBu")
 ```
 
 ```
@@ -487,7 +486,7 @@ na.omit(dataset) %>%
   theme(plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  scale_fill_brewer(palette="BrBG")
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
@@ -503,7 +502,7 @@ na.omit(dataset) %>%
        x = "Clutch Size Mean",
        y = "Frequency",
        fill="Incubating Sex") +
-  scale_fill_brewer(palette = "BrBG") + #might want to consider a new palette
+  scale_fill_brewer(palette = "YlGnBu") +
   theme(plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10))

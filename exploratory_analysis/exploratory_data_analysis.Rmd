@@ -54,10 +54,9 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Distribution of Nest Builder Sex",
+  labs(title="Distribution of Nest-Builder Sex",
        x="Nest Builder", 
-       y="Count",
-       fill="Nest_builder") + 
+       y="Count") + 
   scale_fill_brewer(palette="YlGnBu")
 ```
 
@@ -83,7 +82,7 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Builder Sex by Site",
+  labs(title="Nest-Builder Sex by Site",
        x="Nest Builder", 
        y="Count",
        fill="Nest Builder") + 
@@ -93,7 +92,7 @@ dataset %>%
 
 We see that females tend to take the lead in ground and grass reed nest building. Both parents tend to be more involved in ground holes, ledges, tree bushes, walls, and water, while neither may do work in tree holes. 
 
-Here's another way of visualizing the same info:
+Here's another way of visualizing similar info:
 
 ```{r}
 dataset %>% 
@@ -104,7 +103,7 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Site by Sex of Builder",
+  labs(title="Nest Site by Nest-Builder Sex",
        x="Site", 
        y="Count",
        fill="Nest Builder") +
@@ -122,7 +121,7 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Builder Sex by Nest Structure",
+  labs(title="Nest-Builder Sex by Nest Structure",
        x=NULL, 
        y="Count",
        fill="Nest Builder") + 
@@ -140,7 +139,7 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Structure by Builder Sex",
+  labs(title="Nest Structure by Nest-Builder Sex",
        x="Structure", 
        y="Count",
        fill="Nest Builder") +
@@ -160,7 +159,7 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Nest Builder Sex by Incubating Sex",
+  labs(title="Nest-Builder Sex by Incubating Sex",
        x=NULL, 
        y="Count",
        fill="Nest Builder") + 
@@ -180,7 +179,7 @@ dataset %>%
         plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10)) +
-  labs(title="Incubating Sex by Sex of Nest-builder",
+  labs(title="Incubating Sex by Nest-Builder Sex",
        x="Incubating Sex", 
        y="Count",
        fill="Nest Builder") +
