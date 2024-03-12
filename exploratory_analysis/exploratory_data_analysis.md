@@ -443,12 +443,17 @@ na.omit(dataset) %>%
 na.omit(dataset) %>%
   ggplot(aes(x = latitude_mean, y = length_breeding)) +
   geom_point() +
+  geom_smooth(method="lm", se=F) +
   labs(title="Breeding Season Length Across Latitudes",
        x="Mean Latitude",
        y="Length Breeding Season") +
   theme(plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10))
+```
+
+```
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
