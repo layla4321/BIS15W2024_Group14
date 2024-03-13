@@ -17,10 +17,10 @@ library(tidyverse)
 
 ```
 ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.4     ✔ readr     2.1.4
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
 ## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-## ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 ## ✔ purrr     1.0.2     
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
@@ -44,6 +44,8 @@ library(janitor)
 
 ```r
 library(dplyr)
+#install.packages("gtools")
+library(gtools)
 ```
 
 ## Data
@@ -511,15 +513,19 @@ na.omit(dataset) %>%
        x = "Clutch Size Mean",
        y = "Frequency",
        fill="Incubating Sex") +
-  scale_fill_brewer(palette = "YlGnBu") +
   theme(plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
-        axis.title.y = element_text(size=10))
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette = "YlGnBu")
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
- 
+
+## `case_when()` with our Continuous Variables
+
 Another way of exploring the data is using case_when() to make new variables based on our findings. 
+
+**Length Breeding Season:** 
 
 
 ```r
@@ -548,6 +554,88 @@ summary(dataset$length_breeding)
 
 
 ```r
+dataset %>% 
+  mutate(range_breeding_length=case_when(length_breeding <= 3 ~ "very short",
+                                  length_breeding>3 & length_breeding <= 6  ~ "short",
+                                 length_breeding > 6 & length_breeding <= 9 ~ "medium",
+                                 length_breeding >9 ~ "large")) %>% 
+  filter(nest_builder != "neither") %>%
+  filter(length_breeding != "NA") %>%  
+  ggplot(aes(x=range_breeding_length, fill=nest_builder))+
+  geom_bar(position="dodge", alpha=0.6, color="black")+
+  labs(title="Observations by Breeding Length Range",
+       x="Breeding Length Range",
+       y="Nest Builder")+
+  scale_fill_brewer(palette="YlGnBu")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+
+Alternatively:
+
+
+```r
+len_quartiles <- quantcut(dataset$length_breeding)
+table(len_quartiles)
+```
+
+```
+## len_quartiles
+##  [2,4]  (4,5]  (5,6] (6,12] 
+##    126    170    126     79
+```
+
+
+
+```r
+dataset %>% 
+  mutate(cat_len=case_when(length_breeding<4 ~ "very short",
+                           length_breeding>=4 & length_breeding<5 ~ "short",
+                           length_breeding>=5 & length_breeding<6 ~ "medium",
+                           length_breeding>=6 ~ "long")) %>% 
+  select(species, length_breeding, cat_len) %>% 
+  head()
+```
+
+```
+## # A tibble: 6 × 3
+##   species               length_breeding cat_len   
+##   <chr>                           <dbl> <chr>     
+## 1 Accipiter_badius                    4 short     
+## 2 Accipiter_brevipes                  3 very short
+## 3 Accipiter_gentilis                  6 long      
+## 4 Accipiter_nisus                     5 medium    
+## 5 Acridotheres_tristis                4 short     
+## 6 Acrocephalus_agricola               6 long
+```
+
+
+```r
+dataset %>% 
+  mutate(cat_len=case_when(length_breeding<4 ~ "very short",
+                           length_breeding>=4 & length_breeding<5 ~ "short",
+                           length_breeding>=5 & length_breeding<6 ~ "medium",
+                           length_breeding>=6 ~ "long")) %>% 
+  filter(cat_len != "NA") %>% 
+  filter(nest_builder != "neither") %>% 
+  ggplot(aes(x=cat_len, fill=nest_builder)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  labs(title="Length Breeding Category by Nest-Builder",
+       x = "Length Breeding Category",
+       y = "Count",
+       fill="Nest Builder") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette = "YlGnBu")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
+
+**Mean Clutch Size:**
+
+
+```r
 dataset <- dataset %>% 
   mutate(range_clutch_size=case_when(clutch_size_mean <= 3 ~ "very_small",
                                   clutch_size_mean>3 & clutch_size_mean <= 6  ~ "small",
@@ -568,28 +656,125 @@ dataset %>%
   scale_fill_brewer(palette="YlGnBu")
 ```
 
-![](exploratory_data_analysis_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
+
+Alternatively:
 
 
 ```r
-dataset <- dataset %>% 
-  mutate(range_breeding_length=case_when(length_breeding <= 3 ~ "very short",
-                                  length_breeding>3 & length_breeding <= 6  ~ "short",
-                                 length_breeding > 6 & length_breeding <= 9 ~ "medium",
-                                 length_breeding >9 ~ "large"))
-
-
-
-dataset %>%
-  filter(nest_builder != "neither") %>%
-  filter(length_breeding != "NA") %>%  
-  ggplot(aes(x=range_breeding_length, fill=nest_builder))+
-  geom_bar(position="dodge", alpha=0.6, color="black")+
-  labs(title="Observations by Breeding Length Range",
-       x="Breeding Length Range",
-       y="Nest Builder")+
-  scale_fill_brewer(palette="YlGnBu")
+clutch_quartiles <- quantcut(dataset$clutch_size_mean)
+table(clutch_quartiles)
 ```
 
-![](exploratory_data_analysis_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
+```
+## clutch_quartiles
+##  [1,3.5]  (3.5,4]  (4,5.5] (5.5,15] 
+##      182       81      159       91
+```
+
+
+```r
+dataset %>% 
+  mutate(cat_clutch=case_when(clutch_size_mean<3.5 ~ "very small",
+                           clutch_size_mean>=3.5 & clutch_size_mean<4 ~ "small",
+                           clutch_size_mean>=4 & clutch_size_mean<5.5 ~ "medium",
+                           clutch_size_mean>=5.5 ~ "large")) %>% 
+  select(species, clutch_size_mean, cat_clutch) %>% 
+  head()
+```
+
+```
+## # A tibble: 6 × 3
+##   species               clutch_size_mean cat_clutch
+##   <chr>                            <dbl> <chr>     
+## 1 Accipiter_badius                   3.5 small     
+## 2 Accipiter_brevipes                 4   medium    
+## 3 Accipiter_gentilis                 3.5 small     
+## 4 Accipiter_nisus                    5   medium    
+## 5 Acridotheres_tristis               4.5 medium    
+## 6 Acrocephalus_agricola              4.5 medium
+```
+
+
+```r
+dataset %>% 
+  mutate(cat_clutch=case_when(clutch_size_mean<3.5 ~ "very small",
+                           clutch_size_mean>=3.5 & clutch_size_mean<4 ~ "small",
+                           clutch_size_mean>=4 & clutch_size_mean<5.5 ~ "medium",
+                           clutch_size_mean>=5.5 ~ "large")) %>% 
+  filter(cat_clutch != "NA") %>% 
+  filter(nest_builder != "neither") %>% 
+  ggplot(aes(x=cat_clutch, fill=nest_builder)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  labs(title="Clutch Size Category by Nest-Builder",
+       x = "Clutch Size Category",
+       y = "Count",
+       fill="Nest Builder") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette = "YlGnBu")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
+
+**Mean Breeding Latitude**
+
+
+```r
+lat_quartiles <- quantcut(dataset$latitude_mean)
+table(lat_quartiles)
+```
+
+```
+## lat_quartiles
+##   [16,38.5] (38.5,47.5] (47.5,54.5] (54.5,79.5] 
+##         129         136         129         119
+```
+
+
+```r
+dataset %>% 
+  mutate(cat_lat=case_when(latitude_mean<38.5 ~ "very low",
+                           latitude_mean>=38.5 & latitude_mean<47.5 ~ "low",
+                           latitude_mean>=47.5 & latitude_mean<54.5 ~ "medium",
+                           latitude_mean>=54.5 ~ "high")) %>% 
+  select(species, latitude_mean, cat_lat) %>% 
+  head()
+```
+
+```
+## # A tibble: 6 × 3
+##   species               latitude_mean cat_lat 
+##   <chr>                         <dbl> <chr>   
+## 1 Accipiter_badius               NA   <NA>    
+## 2 Accipiter_brevipes             44.5 low     
+## 3 Accipiter_gentilis             52.5 medium  
+## 4 Accipiter_nisus                49   medium  
+## 5 Acridotheres_tristis           35.5 very low
+## 6 Acrocephalus_agricola          46   low
+```
+
+
+```r
+dataset %>% 
+  mutate(cat_lat=case_when(latitude_mean<38.5 ~ "very low",
+                           latitude_mean>=38.5 & latitude_mean<47.5 ~ "low",
+                           latitude_mean>=47.5 & latitude_mean<54.5 ~ "medium",
+                           latitude_mean>=54.5 ~ "high")) %>% 
+  filter(cat_lat != "NA") %>% 
+  filter(nest_builder != "neither") %>% 
+  ggplot(aes(x=cat_lat, fill=nest_builder)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  labs(title="Breeding Latitude Category by Nest-Builder",
+       x = "Breeding Latitude Category",
+       y = "Count",
+       fill="Nest Builder") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette = "YlGnBu")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-36-1.png)<!-- -->
 
