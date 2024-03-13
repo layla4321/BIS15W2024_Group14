@@ -120,7 +120,7 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session) {
-  dataset <- read_delim("../data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
+  dataset <- read_delim("https://raw.githubusercontent.com/meghana202/BIS15W2024_Group14/main/data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
   dataset <- dataset %>% separate(species, into= c("genus", "species"), sep = "_")
   large_genuses_data <- dataset %>% 
     group_by(genus) %>% 
@@ -139,20 +139,21 @@ server <- function(input, output, session) {
       bird_data
     })
     
-    # Display image
+    #Display image
     output$bird_image <- renderImage({
-      # Constructing the file path to the image
-      filename <- normalizePath(file.path('../images',
-                                          paste(genus_bird, "_", species_bird, ".jpg", sep='')))
-      # Return a list containing the filename and alt text
-      list(src = filename,
+      #Constructing the URL to the image
+      url <- paste('https://raw.githubusercontent.com/meghana202/BIS15W2024_Group14/main/images/',
+                   paste(genus_bird, "_", species_bird, ".jpg", sep=''))
+      
+      #Return a list containing the URL and alt text
+      list(src = url,
            width = "auto",
            height = 400,
            alt = paste("Image for", input$bird_selection))
       
     }, deleteFile = FALSE)
     
-    # Display bird facts
+    #Display bird facts
     output$bird_facts <- renderUI({
       facts <- switch(input$bird_selection,
                       "Long Eared Owl" = c("Females incubate, and neither sex builds the nest.",

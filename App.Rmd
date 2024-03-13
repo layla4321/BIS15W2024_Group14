@@ -188,12 +188,12 @@ server <- function(input, output, session) {
       bird_data
     })
     
-    # Display image
+    #Display image
     output$bird_image <- renderImage({
-      # Constructing the file path to the image
+      #Constructing the file path to the image
       filename <- normalizePath(file.path('images',
                               paste(genus_bird, "_", species_bird, ".jpg", sep='')))
-      # Return a list containing the filename and alt text
+      #Return a list containing the filename and alt text
       list(src = filename,
            width = "auto",
            height = 400,
@@ -201,7 +201,7 @@ server <- function(input, output, session) {
 
     }, deleteFile = FALSE)
     
-    # Display bird facts
+    #Display bird facts
     output$bird_facts <- renderUI({
       facts <- switch(input$bird_selection,
                       "Long Eared Owl" = c("Females incubate, and neither sex builds the nest.",
