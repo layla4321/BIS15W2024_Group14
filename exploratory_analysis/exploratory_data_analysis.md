@@ -17,10 +17,10 @@ library(tidyverse)
 
 ```
 ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ dplyr     1.1.4     ✔ readr     2.1.4
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
 ## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+## ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
 ## ✔ purrr     1.0.2     
 ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
@@ -40,6 +40,10 @@ library(janitor)
 ## The following objects are masked from 'package:stats':
 ## 
 ##     chisq.test, fisher.test
+```
+
+```r
+library(dplyr)
 ```
 
 ## Data
@@ -514,4 +518,78 @@ na.omit(dataset) %>%
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+ 
+Another way of exploring the data is using case_when() to make new variables based on our findings. 
+
+
+```r
+na.omit(dataset) %>% 
+  select(length_breeding) %>% 
+  summarise(min=min(length_breeding),
+            max=max(length_breeding))
+```
+
+```
+## # A tibble: 1 × 2
+##     min   max
+##   <dbl> <dbl>
+## 1     2    12
+```
+
+
+```r
+summary(dataset$length_breeding)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   2.000   4.000   5.000   5.431   6.000  12.000      20
+```
+
+
+```r
+dataset <- dataset %>% 
+  mutate(range_clutch_size=case_when(clutch_size_mean <= 3 ~ "very_small",
+                                  clutch_size_mean>3 & clutch_size_mean <= 6  ~ "small",
+                                 clutch_size_mean > 6 & clutch_size_mean <= 9 ~ "medium",
+                                  clutch_size_mean >9 & clutch_size_mean <= 12 ~ "large",
+                                 clutch_size_mean >12 ~ "very_large"))
+
+
+
+dataset %>%
+  filter(nest_builder != "neither") %>%
+  filter(clutch_size_mean != "NA") %>%  
+  ggplot(aes(x=range_clutch_size, fill=nest_builder))+
+  geom_bar(position="dodge", alpha=0.6, color="black")+
+  labs(title="Observations by Clutch Size Range",
+       x="Clutch Size Range",
+       y="Nest Builder")+
+  scale_fill_brewer(palette="YlGnBu")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+
+
+```r
+dataset <- dataset %>% 
+  mutate(range_breeding_length=case_when(length_breeding <= 3 ~ "very short",
+                                  length_breeding>3 & length_breeding <= 6  ~ "short",
+                                 length_breeding > 6 & length_breeding <= 9 ~ "medium",
+                                 length_breeding >9 ~ "large"))
+
+
+
+dataset %>%
+  filter(nest_builder != "neither") %>%
+  filter(length_breeding != "NA") %>%  
+  ggplot(aes(x=range_breeding_length, fill=nest_builder))+
+  geom_bar(position="dodge", alpha=0.6, color="black")+
+  labs(title="Observations by Breeding Length Range",
+       x="Breeding Length Range",
+       y="Nest Builder")+
+  scale_fill_brewer(palette="YlGnBu")
+```
+
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-27-1.png)<!-- -->
 

@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(naniar)
 library(janitor)
+library(dplyr)
 ```
 
 ## Data
@@ -343,5 +344,61 @@ na.omit(dataset) %>%
   theme(plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10))
+```
+ 
+Another way of exploring the data is using case_when() to make new variables based on our findings. 
+
+```{r}
+na.omit(dataset) %>% 
+  select(length_breeding) %>% 
+  summarise(min=min(length_breeding),
+            max=max(length_breeding))
+
+```
+
+```{r}
+summary(dataset$length_breeding)
+```
+
+```{r}
+
+dataset <- dataset %>% 
+  mutate(range_clutch_size=case_when(clutch_size_mean <= 3 ~ "very_small",
+                                  clutch_size_mean>3 & clutch_size_mean <= 6  ~ "small",
+                                 clutch_size_mean > 6 & clutch_size_mean <= 9 ~ "medium",
+                                  clutch_size_mean >9 & clutch_size_mean <= 12 ~ "large",
+                                 clutch_size_mean >12 ~ "very_large"))
+
+
+
+dataset %>%
+  filter(nest_builder != "neither") %>%
+  filter(clutch_size_mean != "NA") %>%  
+  ggplot(aes(x=range_clutch_size, fill=nest_builder))+
+  geom_bar(position="dodge", alpha=0.6, color="black")+
+  labs(title="Observations by Clutch Size Range",
+       x="Clutch Size Range",
+       y="Nest Builder")+
+  scale_fill_brewer(palette="YlGnBu")
+```
+
+```{r}
+dataset <- dataset %>% 
+  mutate(range_breeding_length=case_when(length_breeding <= 3 ~ "very short",
+                                  length_breeding>3 & length_breeding <= 6  ~ "short",
+                                 length_breeding > 6 & length_breeding <= 9 ~ "medium",
+                                 length_breeding >9 ~ "large"))
+
+
+
+dataset %>%
+  filter(nest_builder != "neither") %>%
+  filter(length_breeding != "NA") %>%  
+  ggplot(aes(x=range_breeding_length, fill=nest_builder))+
+  geom_bar(position="dodge", alpha=0.6, color="black")+
+  labs(title="Observations by Breeding Length Range",
+       x="Breeding Length Range",
+       y="Nest Builder")+
+  scale_fill_brewer(palette="YlGnBu")
 ```
 
