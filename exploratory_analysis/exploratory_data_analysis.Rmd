@@ -17,6 +17,8 @@ library(tidyverse)
 library(naniar)
 library(janitor)
 library(dplyr)
+#install.packages("gtools")
+library(gtools)
 ```
 
 ## Data
@@ -340,13 +342,17 @@ na.omit(dataset) %>%
        x = "Clutch Size Mean",
        y = "Frequency",
        fill="Incubating Sex") +
-  scale_fill_brewer(palette = "YlGnBu") +
   theme(plot.title = element_text(size=12, face="bold"),
         axis.title.x = element_text(size=10),
-        axis.title.y = element_text(size=10))
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette = "YlGnBu")
 ```
- 
+
+## `case_when()` with our Continuous Variables
+
 Another way of exploring the data is using case_when() to make new variables based on our findings. 
+
+**Length Breeding Season:** 
 
 ```{r}
 na.omit(dataset) %>% 
@@ -359,6 +365,62 @@ na.omit(dataset) %>%
 ```{r}
 summary(dataset$length_breeding)
 ```
+
+```{r}
+dataset %>% 
+  mutate(range_breeding_length=case_when(length_breeding <= 3 ~ "very short",
+                                  length_breeding>3 & length_breeding <= 6  ~ "short",
+                                 length_breeding > 6 & length_breeding <= 9 ~ "medium",
+                                 length_breeding >9 ~ "large")) %>% 
+  filter(nest_builder != "neither") %>%
+  filter(length_breeding != "NA") %>%  
+  ggplot(aes(x=range_breeding_length, fill=nest_builder))+
+  geom_bar(position="dodge", alpha=0.6, color="black")+
+  labs(title="Observations by Breeding Length Range",
+       x="Breeding Length Range",
+       y="Nest Builder")+
+  scale_fill_brewer(palette="YlGnBu")
+```
+
+Alternatively:
+
+```{r}
+len_quartiles <- quantcut(dataset$length_breeding)
+table(len_quartiles)
+```
+
+
+```{r}
+dataset %>% 
+  mutate(cat_len=case_when(length_breeding<4 ~ "very short",
+                           length_breeding>=4 & length_breeding<5 ~ "short",
+                           length_breeding>=5 & length_breeding<6 ~ "medium",
+                           length_breeding>=6 ~ "long")) %>% 
+  select(species, length_breeding, cat_len) %>% 
+  head()
+```
+
+```{r}
+dataset %>% 
+  mutate(cat_len=case_when(length_breeding<4 ~ "very short",
+                           length_breeding>=4 & length_breeding<5 ~ "short",
+                           length_breeding>=5 & length_breeding<6 ~ "medium",
+                           length_breeding>=6 ~ "long")) %>% 
+  filter(cat_len != "NA") %>% 
+  filter(nest_builder != "neither") %>% 
+  ggplot(aes(x=cat_len, fill=nest_builder)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  labs(title="Length Breeding Category by Nest-Builder",
+       x = "Length Breeding Category",
+       y = "Count",
+       fill="Nest Builder") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette = "YlGnBu")
+```
+
+**Mean Clutch Size:**
 
 ```{r}
 
@@ -382,23 +444,77 @@ dataset %>%
   scale_fill_brewer(palette="YlGnBu")
 ```
 
+Alternatively:
+
 ```{r}
-dataset <- dataset %>% 
-  mutate(range_breeding_length=case_when(length_breeding <= 3 ~ "very short",
-                                  length_breeding>3 & length_breeding <= 6  ~ "short",
-                                 length_breeding > 6 & length_breeding <= 9 ~ "medium",
-                                 length_breeding >9 ~ "large"))
+clutch_quartiles <- quantcut(dataset$clutch_size_mean)
+table(clutch_quartiles)
+```
 
+```{r}
+dataset %>% 
+  mutate(cat_clutch=case_when(clutch_size_mean<3.5 ~ "very small",
+                           clutch_size_mean>=3.5 & clutch_size_mean<4 ~ "small",
+                           clutch_size_mean>=4 & clutch_size_mean<5.5 ~ "medium",
+                           clutch_size_mean>=5.5 ~ "large")) %>% 
+  select(species, clutch_size_mean, cat_clutch) %>% 
+  head()
+```
 
+```{r}
+dataset %>% 
+  mutate(cat_clutch=case_when(clutch_size_mean<3.5 ~ "very small",
+                           clutch_size_mean>=3.5 & clutch_size_mean<4 ~ "small",
+                           clutch_size_mean>=4 & clutch_size_mean<5.5 ~ "medium",
+                           clutch_size_mean>=5.5 ~ "large")) %>% 
+  filter(cat_clutch != "NA") %>% 
+  filter(nest_builder != "neither") %>% 
+  ggplot(aes(x=cat_clutch, fill=nest_builder)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  labs(title="Clutch Size Category by Nest-Builder",
+       x = "Clutch Size Category",
+       y = "Count",
+       fill="Nest Builder") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette = "YlGnBu")
+```
 
-dataset %>%
-  filter(nest_builder != "neither") %>%
-  filter(length_breeding != "NA") %>%  
-  ggplot(aes(x=range_breeding_length, fill=nest_builder))+
-  geom_bar(position="dodge", alpha=0.6, color="black")+
-  labs(title="Observations by Breeding Length Range",
-       x="Breeding Length Range",
-       y="Nest Builder")+
-  scale_fill_brewer(palette="YlGnBu")
+**Mean Breeding Latitude**
+
+```{r}
+lat_quartiles <- quantcut(dataset$latitude_mean)
+table(lat_quartiles)
+```
+
+```{r}
+dataset %>% 
+  mutate(cat_lat=case_when(latitude_mean<38.5 ~ "very low",
+                           latitude_mean>=38.5 & latitude_mean<47.5 ~ "low",
+                           latitude_mean>=47.5 & latitude_mean<54.5 ~ "medium",
+                           latitude_mean>=54.5 ~ "high")) %>% 
+  select(species, latitude_mean, cat_lat) %>% 
+  head()
+```
+
+```{r}
+dataset %>% 
+  mutate(cat_lat=case_when(latitude_mean<38.5 ~ "very low",
+                           latitude_mean>=38.5 & latitude_mean<47.5 ~ "low",
+                           latitude_mean>=47.5 & latitude_mean<54.5 ~ "medium",
+                           latitude_mean>=54.5 ~ "high")) %>% 
+  filter(cat_lat != "NA") %>% 
+  filter(nest_builder != "neither") %>% 
+  ggplot(aes(x=cat_lat, fill=nest_builder)) +
+  geom_bar(position = "dodge", color="black", alpha=0.8) +
+  labs(title="Breeding Latitude Category by Nest-Builder",
+       x = "Breeding Latitude Category",
+       y = "Count",
+       fill="Nest Builder") +
+  theme(plot.title = element_text(size=12, face="bold"),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  scale_fill_brewer(palette = "YlGnBu")
 ```
 
