@@ -120,7 +120,7 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session) {
-  dataset <- read_delim("../data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
+  dataset <- read_delim("https://raw.githubusercontent.com/meghana202/BIS15W2024_Group14/main/data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
   dataset <- dataset %>% separate(species, into= c("genus", "species"), sep = "_")
   large_genuses_data <- dataset %>% 
     group_by(genus) %>% 
@@ -129,9 +129,9 @@ server <- function(input, output, session) {
     slice_head(n=35)
   large_genuses <- large_genuses_data$genus
   
-  observeEvent(input$bird_selection, {
-    genus_bird <- species_map[[input$bird_selection]][1]
-    species_bird <- species_map[[input$bird_selection]][2]
+  observeEvent(shiny::input$bird_selection, {
+    genus_bird <- species_map[[shiny::input$bird_selection]][1]
+    species_bird <- species_map[[shiny::input$bird_selection]][2]
     bird_data <- dataset %>% filter(genus == genus_bird, species == species_bird)
     
     
@@ -142,19 +142,18 @@ server <- function(input, output, session) {
     # Display image
     output$bird_image <- renderImage({
       # Constructing the file path to the image
-      filename <- normalizePath(file.path('../images',
-                                          paste(genus_bird, "_", species_bird, ".jpg", sep='')))
+      url <- paste('https://github.com/meghana202/BIS15W2024_Group14/tree/ce9fb60b00c7db7c28b1208912662c84fbd76b99/images',genus_bird, "_", species_bird, ".jpg", sep='')
       # Return a list containing the filename and alt text
-      list(src = filename,
+      list(src = url,
            width = "auto",
            height = 400,
-           alt = paste("Image for", input$bird_selection))
+           alt = paste("Image for", shiny::input$bird_selection))
       
     }, deleteFile = FALSE)
     
     # Display bird facts
     output$bird_facts <- renderUI({
-      facts <- switch(input$bird_selection,
+      facts <- switch(shiny::input$bird_selection,
                       "Long Eared Owl" = c("Females incubate, and neither sex builds the nest.",
                                            "Owls do not build their own nest, this species usually uses nests built by other animals"),
                       "Great Spotted Cuckoo" = c("Neither gender incubates the eggs nor builds the nest.",
@@ -181,7 +180,7 @@ server <- function(input, output, session) {
   })
   
   output$additional_inputs <- renderUI({
-    plot_type <- input$master_input
+    plot_type <- shiny::input$master_input
     
     if (plot_type == "Distribution of Nest Builder by Sex") {
       selectInput("fill_var", "Select fill variable:", 
@@ -204,38 +203,38 @@ server <- function(input, output, session) {
   })
   
   output$plot <- renderPlot({
-    plot_type <- input$master_input
+    plot_type <- shiny::input$master_input
     
     if (plot_type == "Distribution of Nest Builder by Sex") {
       dataset %>%
-        ggplot(aes_string(x = "nest_builder", fill = input$fill_var)) +
+        ggplot(aes_string(x = "nest_builder", fill = shiny::input$fill_var)) +
         geom_bar(position = "dodge", na.rm=TRUE) +
         theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
         labs(x = "Sex", y = "Count", fill = "Fill by") +
         scale_fill_brewer(palette = "YlGnBu")
     } else if (plot_type == "Distribution of Nest Builder by Sex Against Continuous Variables") {
       dataset %>%
-        ggplot(aes_string(x = "nest_builder", y = input$y_var, fill = "nest_builder")) +
+        ggplot(aes_string(x = "nest_builder", y = shiny::input$y_var, fill = "nest_builder")) +
         geom_boxplot(na.rm=TRUE) +
         theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
-        labs(x = "Sex", y = input$y_var) +
+        labs(x = "Sex", y = shiny::input$y_var) +
         scale_fill_brewer(palette = "YlGnBu")
     } else if (plot_type == "Trends in Breeding Season Length (and Other Continuous Variables)") {
       dataset %>%
-        ggplot(aes_string(x = "length_breeding", y = input$y_var)) +
+        ggplot(aes_string(x = "length_breeding", y = shiny::input$y_var)) +
         geom_point(na.rm=TRUE) +
         geom_smooth(method = "lm", se = FALSE) +
         theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
-        labs(x = "Length of Breeding Season", y = input$y_var) +
+        labs(x = "Length of Breeding Season", y = shiny::input$y_var) +
         scale_fill_brewer(palette = "YlGnBu")
     } else if (plot_type == "Differences Between Species of a Genus") {
       genus_filtered_dataset <- filter(dataset, genus %in% large_genuses)
-      p <- ggplot(genus_filtered_dataset, aes_string(x = "genus", y = input$y_var)) +
+      p <- ggplot(genus_filtered_dataset, aes_string(x = "genus", y = shiny::input$y_var)) +
         theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
-        labs(x = "Genus", y = input$y_var)
-      if (input$y_var %in% c("nest_builder", "nest_site", "nest_structure", "incubating_sex")) {
+        labs(x = "Genus", y = shiny::input$y_var)
+      if (shiny::input$y_var %in% c("nest_builder", "nest_site", "nest_structure", "incubating_sex")) {
         p <- p + geom_count(color = "#7fcdbb")
-      } else if (input$y_var %in% c("clutch_size_mean", "length_breeding", "latitude_mean")) {
+      } else if (shiny::input$y_var %in% c("clutch_size_mean", "length_breeding", "latitude_mean")) {
         p <- p + geom_boxplot(fill = "#7fcdbb")
       }
       print(p)

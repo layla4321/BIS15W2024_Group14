@@ -43,7 +43,6 @@ large_genuses <- large_genuses_data$genus
 shinylive::export(appdir = "app", destdir = "docs")
 ```
 
-
 ```{r}
 httpuv::runStaticServer("docs/")
 ```
