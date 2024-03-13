@@ -1,66 +1,3 @@
----
-title: "Sex Specific Contributions Exploratory Analysis"
-output: 
-  html_document: 
-    keep_md: true
-date: "2024-02-29"
----
-### Setup
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
-library(tidyverse)
-library(naniar)
-library(janitor)
-library(shiny)
-library(shinythemes)
-```
-
-```{r}
-dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
-```
-
-
-```{r}
-dataset <- dataset %>% 
-  separate(species, into= c("genus", "species"), sep = "_")
-head(dataset)
-```
-
-```{r}
-large_genuses_data <- dataset %>% 
-  group_by(genus) %>% 
-  summarize(n_species=n()) %>% 
-  arrange(desc(n_species)) %>% 
-  slice_head(n=35)
-large_genuses <- large_genuses_data$genus
-```
-
-
-```{r}
-shinylive::export(appdir = "app", destdir = "docs")
-```
-
-
-```{r}
-httpuv::runStaticServer("docs/")
-```
-
-#### App structure
-Plot distribution of nest_builder (sex): dropdown of group by all, or by each of the variables
-
-Plot distribution of nest_builder (sex) against continuous variables: dropdown of continuous variable type, dropdown of plot type
-
-Free exploration section!
-1-categorical plot, dropdown for the 1 categorical, dropdown for coloring/grouping
-1-categorical 1-continuous plot, dropdowns for each variable
-2-continuous plot, dropdowns for each variable, dropdown for coloring
-
-#### Bigger badder app
-
-```{r}
 library(shiny)
 library(tidyverse)
 library(naniar)
@@ -183,7 +120,7 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session) {
-  dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
+  dataset <- read_delim("../data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
   dataset <- dataset %>% separate(species, into= c("genus", "species"), sep = "_")
   large_genuses_data <- dataset %>% 
     group_by(genus) %>% 
@@ -205,7 +142,7 @@ server <- function(input, output, session) {
     # Display image
     output$bird_image <- renderImage({
       # Constructing the file path to the image
-      filename <- normalizePath(file.path('images',
+      filename <- normalizePath(file.path('../images',
                                           paste(genus_bird, "_", species_bird, ".jpg", sep='')))
       # Return a list containing the filename and alt text
       list(src = filename,
@@ -307,5 +244,3 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
-```
-genus_filtered_dataset <- filter(dataset, genus == input$genus)
