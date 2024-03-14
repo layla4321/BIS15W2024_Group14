@@ -21,7 +21,7 @@ library(shinythemes)
 ```
 
 ```{r}
-dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
+dataset <- read_delim("../data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
 ```
 
 
@@ -53,12 +53,6 @@ Free exploration section!
 #### Bigger badder app
 
 ```{r}
-library(shiny)
-library(tidyverse)
-library(naniar)
-library(janitor)
-library(shinythemes)
-
 species_map <- list("Long Eared Owl" = c("Asio","otus"),
                     "Great Spotted Cuckoo" = c("Clamator","glandarius"),
                     "Streaked Weaver" = c("Ploceus","manyar"),
@@ -175,7 +169,7 @@ ui <- fluidPage(
 
 
 server <- function(input, output, session) {
-  dataset <- read_delim("data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
+  dataset <- read_delim("../data/Sex_specific_contribution.csv", delim=";") %>% clean_names()
   dataset <- dataset %>% separate(species, into= c("genus", "species"), sep = "_")
   large_genuses_data <- dataset %>% 
     group_by(genus) %>% 
@@ -197,7 +191,7 @@ server <- function(input, output, session) {
     # Display image
     output$bird_image <- renderImage({
       # Constructing the file path to the image
-      filename <- normalizePath(file.path('images',
+      filename <- normalizePath(file.path('../images',
                                           paste(genus_bird, "_", species_bird, ".jpg", sep='')))
       # Return a list containing the filename and alt text
       list(src = filename,
