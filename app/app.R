@@ -46,10 +46,10 @@ ui <- fluidPage(
              sidebarLayout(
                sidebarPanel(
                  selectInput("master_input", "Select Plot Type",
-                             choices = c("Distribution of Nest Builder by Sex", 
+                             choices = c("Distribution of Categorical Variables by Nest Builder Sex", 
                                          "Distribution of Nest Builder by Sex Against Continuous Variables",
                                          "Trends in Breeding Season Length (and Other Continuous Variables)",
-                                         "Differences Between Species of a Genus")
+                                         "Differences Between Variables Across Different Genuses")
                  ),
                  uiOutput("additional_inputs")
                ),
@@ -186,8 +186,8 @@ server <- function(input, output, session) {
   output$additional_inputs <- renderUI({
     plot_type <- input$master_input
     
-    if (plot_type == "Distribution of Nest Builder by Sex") {
-      selectInput("fill_var", "Select fill variable:", 
+    if (plot_type == "Distribution of Categorical Variables by Nest Builder Sex") {
+      selectInput("x_var", "Select x variable:", 
                   choices = c("nest_site", "nest_structure", "incubating_sex"), 
                   selected = "nest_site")
     } else if (plot_type == "Distribution of Nest Builder by Sex Against Continuous Variables") {
@@ -198,7 +198,7 @@ server <- function(input, output, session) {
       selectInput("y_var", "Select y variable:", 
                   choices = c("clutch_size_mean", "latitude_mean"), 
                   selected = "latitude_mean")
-    } else if (plot_type == "Differences Between Species of a Genus") {
+    } else if (plot_type == "Differences Between Variables Across Different Genuses") {
       selectInput("y_var", "Select y variable:", 
                   choices = c("nest_builder", "nest_site", "nest_structure", "incubating_sex", 
                               "clutch_size_mean", "length_breeding", "latitude_mean"), 
@@ -209,12 +209,12 @@ server <- function(input, output, session) {
   output$plot <- renderPlot({
     plot_type <- input$master_input
     
-    if (plot_type == "Distribution of Nest Builder by Sex") {
+    if (plot_type == "Distribution of Categorical Variables by Nest Builder Sex") {
       dataset %>%
-        ggplot(aes_string(x = "nest_builder", fill = input$fill_var)) +
+        ggplot(aes_string(x = input$x_var, fill = "nest_builder")) +
         geom_bar(position = "dodge", na.rm=TRUE) +
         theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
-        labs(x = "Sex", y = "Count", fill = "Fill by") +
+        labs(x = input$x_var, y = "Count", fill = "Sex") +
         scale_fill_brewer(palette = "YlGnBu")
     } else if (plot_type == "Distribution of Nest Builder by Sex Against Continuous Variables") {
       dataset %>%
@@ -232,7 +232,7 @@ server <- function(input, output, session) {
         theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
         labs(x = "Length of Breeding Season", y = input$y_var) +
         scale_fill_brewer(palette = "YlGnBu")
-    } else if (plot_type == "Differences Between Species of a Genus") {
+    } else if (plot_type == "Differences Between Variables Across Different Genuses") {
       genus_filtered_dataset <- filter(dataset, genus %in% large_genuses)
       p <- ggplot(genus_filtered_dataset, aes_string(x = "genus", y = input$y_var)) +
         theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
