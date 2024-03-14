@@ -1,3 +1,8 @@
+---
+output: 
+  html_document: 
+    keep_md: true
+---
 # BIS15W2024 Group #14
 
 **Sex specific contributions to nest building:** Are there any patterns of sex-specific
@@ -28,7 +33,9 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 + ShinyApp building
 
 [Layla Abedinimehr](mailto:labedinimehr@ucdavis.edu)
-+ Exploratory data analysis and plotting
++ Exploratory data analysis in alignment with the study's predictions
++ Correlated the variables and built the plots
++ Performed secondary data cleansing as required
 
 [Amina Muhic](mailto:aamuhic@ucdavis.edu)
 + Added aesthetics to plots and formatted/cleaned documents; repository organization
