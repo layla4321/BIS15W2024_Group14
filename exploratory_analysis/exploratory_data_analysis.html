@@ -780,7 +780,8 @@ table(len_quartiles)</code></pre>
                            length_breeding&gt;=6 ~ &quot;long&quot;)) %&gt;% 
   filter(cat_len != &quot;NA&quot;) %&gt;% 
   filter(nest_builder != &quot;neither&quot;) %&gt;% 
-  ggplot(aes(x=factor(cat_len, level=c(&quot;very short&quot;, &quot;short&quot;, &quot;medium&quot;, &quot;long&quot;)), fill=nest_builder)) +
+  ggplot(aes(x=factor(cat_len, level=c(&quot;very short&quot;, &quot;short&quot;, &quot;medium&quot;, &quot;long&quot;)), 
+             fill=nest_builder)) +
   geom_bar(position = &quot;dodge&quot;, color=&quot;black&quot;, alpha=0.8) +
   labs(title=&quot;Length Breeding by Nest-Builder&quot;,
        x = &quot;Length Breeding (Category)&quot;,
@@ -840,7 +841,8 @@ table(clutch_quartiles)</code></pre>
                            clutch_size_mean&gt;=5.5 ~ &quot;large&quot;)) %&gt;% 
   filter(cat_clutch != &quot;NA&quot;) %&gt;% 
   filter(nest_builder != &quot;neither&quot;) %&gt;% 
-  ggplot(aes(x=factor(cat_clutch, level=c(&quot;very small&quot;, &quot;small&quot;, &quot;medium&quot;, &quot;large&quot;)), fill=nest_builder)) +
+  ggplot(aes(x=factor(cat_clutch, level=c(&quot;very small&quot;, &quot;small&quot;, &quot;medium&quot;, &quot;large&quot;)), 
+             fill=nest_builder)) +
   geom_bar(position = &quot;dodge&quot;, color=&quot;black&quot;, alpha=0.8) +
   labs(title=&quot;Clutch Size by Nest-Builder&quot;,
        x = &quot;Clutch Size (Category)&quot;,
@@ -880,7 +882,8 @@ table(lat_quartiles)</code></pre>
                            latitude_mean&gt;=54.5 ~ &quot;high&quot;)) %&gt;% 
   filter(cat_lat != &quot;NA&quot;) %&gt;% 
   filter(nest_builder != &quot;neither&quot;) %&gt;% 
-  ggplot(aes(x=factor(cat_lat, level=c(&quot;very low&quot;, &quot;low&quot;, &quot;medium&quot;, &quot;high&quot;)), fill=nest_builder)) +
+  ggplot(aes(x=factor(cat_lat, level=c(&quot;very low&quot;, &quot;low&quot;, &quot;medium&quot;, &quot;high&quot;)),
+             fill=nest_builder)) +
   geom_bar(position = &quot;dodge&quot;, color=&quot;black&quot;, alpha=0.8) +
   labs(title=&quot;Breeding Latitude by Nest-Builder&quot;,
        x = &quot;Breeding Latitude (Category)&quot;,

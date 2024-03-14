@@ -617,7 +617,8 @@ dataset %>%
                            length_breeding>=6 ~ "long")) %>% 
   filter(cat_len != "NA") %>% 
   filter(nest_builder != "neither") %>% 
-  ggplot(aes(x=factor(cat_len, level=c("very short", "short", "medium", "long")), fill=nest_builder)) +
+  ggplot(aes(x=factor(cat_len, level=c("very short", "short", "medium", "long")), 
+             fill=nest_builder)) +
   geom_bar(position = "dodge", color="black", alpha=0.8) +
   labs(title="Length Breeding by Nest-Builder",
        x = "Length Breeding (Category)",
@@ -703,7 +704,8 @@ dataset %>%
                            clutch_size_mean>=5.5 ~ "large")) %>% 
   filter(cat_clutch != "NA") %>% 
   filter(nest_builder != "neither") %>% 
-  ggplot(aes(x=factor(cat_clutch, level=c("very small", "small", "medium", "large")), fill=nest_builder)) +
+  ggplot(aes(x=factor(cat_clutch, level=c("very small", "small", "medium", "large")), 
+             fill=nest_builder)) +
   geom_bar(position = "dodge", color="black", alpha=0.8) +
   labs(title="Clutch Size by Nest-Builder",
        x = "Clutch Size (Category)",
@@ -763,7 +765,8 @@ dataset %>%
                            latitude_mean>=54.5 ~ "high")) %>% 
   filter(cat_lat != "NA") %>% 
   filter(nest_builder != "neither") %>% 
-  ggplot(aes(x=factor(cat_lat, level=c("very low", "low", "medium", "high")), fill=nest_builder)) +
+  ggplot(aes(x=factor(cat_lat, level=c("very low", "low", "medium", "high")),
+             fill=nest_builder)) +
   geom_bar(position = "dodge", color="black", alpha=0.8) +
   labs(title="Breeding Latitude by Nest-Builder",
        x = "Breeding Latitude (Category)",
