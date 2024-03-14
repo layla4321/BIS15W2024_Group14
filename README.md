@@ -36,12 +36,10 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 
 ### App 
 Contains the App file (standalone R)
+App.Rmd - Our file used to develop the app and more documentation for the development process.
 
 ### EDA
 Contain files involved in plotting and exploratory data analysis
-
-### App.Rmd
-Contains our file used to develop the app and more documentation for the development process.
 
 ### Data and Images
 Contain Images used in our app as well as the data. 
