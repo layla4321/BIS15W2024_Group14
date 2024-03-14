@@ -38,15 +38,6 @@ large_genuses_data <- dataset %>%
 large_genuses <- large_genuses_data$genus
 ```
 
-
-```{r}
-shinylive::export(appdir = "app", destdir = "docs")
-```
-
-```{r}
-httpuv::runStaticServer("docs/")
-```
-
 #### App structure
 Plot distribution of nest_builder (sex): dropdown of group by all, or by each of the variables
 
