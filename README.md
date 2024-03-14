@@ -1,8 +1,3 @@
----
-output: 
-  html_document: 
-    keep_md: true
----
 # BIS15W2024 Group #14
 
 **Sex specific contributions to nest building:** Are there any patterns of sex-specific
