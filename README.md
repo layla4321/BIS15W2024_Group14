@@ -31,7 +31,9 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 + Exploratory data analysis and plotting
 
 [Amina Muhic](mailto:aamuhic@ucdavis.edu)
-+ Aesthetics, presentation, repository organization, some data analysis/plotting
++ Added aesthetics to plots and formatted/cleaned documents; repository organization
++ Built the Google Slides presentation
++ Worked on debugging the data analysis/plotting
 
 ## Files and Folders
 
