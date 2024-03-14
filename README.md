@@ -14,13 +14,6 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 
 [Dryad](https://doi.org/10.5061/dryad.vhhmgqnsq)
 
-## Repository
-
-`data`: Dataframe used for the project
-
-`exploratory_analysis`: Initial exploration of the data; examining correlations between
-the variables
-
 ## Presentation
 
 [Link](https://docs.google.com/presentation/d/1TQ1KQjKxCtga6xTeCVBefpFIpA_n7ZBVaJ4ULldGosk/edit?usp=sharing)
@@ -37,7 +30,7 @@ the variables
 + Exploratory data analysis and plotting
 
 [Amina Muhic](mailto:aamuhic@ucdavis.edu)
-+ Aesthetics, presentation, repository organization
++ Aesthetics, presentation, repository organization, some data analysis/plotting
 
 ## Files and Folders
 
