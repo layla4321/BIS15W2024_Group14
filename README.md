@@ -38,3 +38,14 @@ the variables
 
 [Amina Muhic](mailto:aamuhic@ucdavis.edu)
 + Aesthetics, presentation, repository organization
+
+## Files
+
+### App 
+Contains the App file (standalone R)
+
+### EDA
+Contain files involved in plotting and exploratory data analysis
+
+### App.Rmd
+Contains our file used to develop the app and more documentation for the development process.
