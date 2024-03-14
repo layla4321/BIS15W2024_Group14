@@ -21,7 +21,8 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 ## Group Members
 
 [Meghana Manepalli](mailto:mmanepalli@ucdavis.edu)
-+ Exploratory data analysis and plotting
++ Added stylistic elements and filled out nonplot tabs in the app.
++ Worked on researching outliers and spotlighting them in the app.
 
 [Valerie Whitfield](mailto:vwhitfield@ucdavis.edu)
 + ShinyApp building
