@@ -355,36 +355,6 @@ Another way of exploring the data is using case_when() to make new variables bas
 **Length Breeding Season:** 
 
 ```{r}
-na.omit(dataset) %>% 
-  select(length_breeding) %>% 
-  summarise(min=min(length_breeding),
-            max=max(length_breeding))
-
-```
-
-```{r}
-summary(dataset$length_breeding)
-```
-
-```{r}
-dataset %>% 
-  mutate(range_breeding_length=case_when(length_breeding <= 3 ~ "very short",
-                                  length_breeding>3 & length_breeding <= 6  ~ "short",
-                                 length_breeding > 6 & length_breeding <= 9 ~ "medium",
-                                 length_breeding >9 ~ "large")) %>% 
-  filter(nest_builder != "neither") %>%
-  filter(length_breeding != "NA") %>%  
-  ggplot(aes(x=range_breeding_length, fill=nest_builder))+
-  geom_bar(position="dodge", alpha=0.6, color="black")+
-  labs(title="Observations by Breeding Length Range",
-       x="Breeding Length Range",
-       y="Nest Builder")+
-  scale_fill_brewer(palette="YlGnBu")
-```
-
-Alternatively:
-
-```{r}
 len_quartiles <- quantcut(dataset$length_breeding)
 table(len_quartiles)
 ```
@@ -421,30 +391,6 @@ dataset %>%
 ```
 
 **Mean Clutch Size:**
-
-```{r}
-
-dataset <- dataset %>% 
-  mutate(range_clutch_size=case_when(clutch_size_mean <= 3 ~ "very_small",
-                                  clutch_size_mean>3 & clutch_size_mean <= 6  ~ "small",
-                                 clutch_size_mean > 6 & clutch_size_mean <= 9 ~ "medium",
-                                  clutch_size_mean >9 & clutch_size_mean <= 12 ~ "large",
-                                 clutch_size_mean >12 ~ "very_large"))
-
-
-
-dataset %>%
-  filter(nest_builder != "neither") %>%
-  filter(clutch_size_mean != "NA") %>%  
-  ggplot(aes(x=range_clutch_size, fill=nest_builder))+
-  geom_bar(position="dodge", alpha=0.6, color="black")+
-  labs(title="Observations by Clutch Size Range",
-       x="Clutch Size Range",
-       y="Nest Builder")+
-  scale_fill_brewer(palette="YlGnBu")
-```
-
-Alternatively:
 
 ```{r}
 clutch_quartiles <- quantcut(dataset$clutch_size_mean)
