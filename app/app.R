@@ -187,7 +187,7 @@ server <- function(input, output, session) {
     plot_type <- input$master_input
     
     if (plot_type == "Distribution of Nest Builder by Sex") {
-      selectInput("fill_var", "Select fill variable:", 
+      selectInput("x_var", "Select x variable:", 
                   choices = c("nest_site", "nest_structure", "incubating_sex"), 
                   selected = "nest_site")
     } else if (plot_type == "Distribution of Nest Builder by Sex Against Continuous Variables") {
@@ -211,10 +211,10 @@ server <- function(input, output, session) {
     
     if (plot_type == "Distribution of Nest Builder by Sex") {
       dataset %>%
-        ggplot(aes_string(x = "nest_builder", fill = input$fill_var)) +
+        ggplot(aes_string(x = input$x_var, fill = "nest_builder")) +
         geom_bar(position = "dodge", na.rm=TRUE) +
         theme(axis.text.x = element_text(angle = 50, hjust = 1)) +
-        labs(x = "Sex", y = "Count", fill = "Fill by") +
+        labs(x = input$x_var, y = "Count", fill = "Sex") +
         scale_fill_brewer(palette = "YlGnBu")
     } else if (plot_type == "Distribution of Nest Builder by Sex Against Continuous Variables") {
       dataset %>%
