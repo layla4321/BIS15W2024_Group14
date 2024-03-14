@@ -39,7 +39,7 @@ the variables
 [Amina Muhic](mailto:aamuhic@ucdavis.edu)
 + Aesthetics, presentation, repository organization
 
-## Files
+## Files and Folders
 
 ### App 
 Contains the App file (standalone R)
@@ -49,3 +49,6 @@ Contain files involved in plotting and exploratory data analysis
 
 ### App.Rmd
 Contains our file used to develop the app and more documentation for the development process.
+
+### Data and Images
+Contain Images used in our app as well as the data. 
