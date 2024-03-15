@@ -21,8 +21,10 @@ Pages 1075–1085, https://doi.org/10.1093/beheco/arab035
 ## Group Members
 
 [Meghana Manepalli](mailto:mmanepalli@ucdavis.edu)
-+ Added stylistic elements and filled out nonplot tabs in the app.
-+ Worked on researching outliers and spotlighting them in the app.
++ Added stylistic elements and neatly created non-plot related tabs in the app.
++ Consolited predictions and findings to succinctly display in Summary tab, as well as a References and Intro Tab.
++ Analyzed the dataset for intruiguing anomalies, outliers, and interesting data, which was researched and contextualized in the Spotlight.
++ Developed the html elements in the Spotlight tab - this involved finding and displaying open-source pictures, filtering aspects of the dataset, and displaying the information researched.
 
 [Valerie Whitfield](mailto:vwhitfield@ucdavis.edu)
 + ShinyApp building
