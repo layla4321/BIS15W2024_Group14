@@ -134,7 +134,7 @@ There appear to be NAs, but are all accurately represented as NAs.
 
 ## Nest building
 
-**1. We want to understand the distribution of sexes.** 
+#### 1. We want to understand the distribution of sexes.** 
 
 
 ```r
@@ -154,7 +154,7 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
-We see that the most common nest builder is female, followed by both parents, then neither, and the least common (which is very uncommon) is a male nest builder. Since the 'neither' category won't tell us much about patterns for nest building, we can filter it from further analysis.
+We see that the most common nest builder is female, followed by both parents, then neither, and the least common (which is very uncommon) is a male nest builder. Since the 'neither' category won't tell us much about patterns for nest building, we can filter it from further analysis. This 'neither' class definitely represents interesting breeding behavior, however.
 
 Who are the male nest builders?
 
@@ -181,9 +181,13 @@ dataset %>%
 ## 11 Vanellus_spinosus       male
 ```
 
-**2. Do other factors have correlations with the sex of the nest builder?**
+#### 2. Do other factors have correlations with the sex of the nest builder?**
 
+The paper in which we found the data gives some interesting predictions for nest-building based on other variables in the data. In the paper, they explore these predictions with robust statistical analysis. We want to see if any of these predictions can be observed in our plots.
+
+**Nest-Builder vs. Nest Site**
 Let's look at how nest site and nest builder correlate.
+We predict that above ground nests (tree, ledge, wall) are more likely to be built by both parents, since reduced accessibility/convenience of these nest locations may require the combined effort, energy, and investment of both parents.
 
 
 ```r
@@ -205,7 +209,7 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
-We see that females tend to take the lead in ground and grass reed nest building. Both parents tend to be more involved in ground holes, ledges, tree bushes, walls, and water, while neither may do work in tree holes. 
+We see that females tend to take the lead in ground and grass reed nest building. Both parents tend to be more involved in ground holes, ledges, tree bushes, walls, and water. Thus, the prediction seems to hold in most instances of above-ground nest-building. 
 
 Here's another way of visualizing similar info:
 
@@ -228,7 +232,8 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
-We'll also take a look at how nest structure and nest builder correlate.
+**Nest-builder vs. Nest Structure**
+We'll also take a look at how nest structure and nest builder correlate. We predict nests with more complex structures (i.e., domed), are more likely to be built by both parents. Combined cognitive efforts/abilities = more complex nests.
 
 
 ```r
@@ -250,7 +255,10 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
+This prediction generally holds, since in species that build domed nests, the majority have both parents nest-building.
+
 Alternatively:
+
 
 ```r
 dataset %>% 
@@ -271,7 +279,8 @@ dataset %>%
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 
-What about the correlation between the incubating sex and nest-building sex?
+**Nest-Builder vs. Incubating Sex**
+What about the correlation between the incubating sex and nest-building sex? When the female parent is the incubator, we expect the male parent to be the nest-builder. We expect for there to be a 'trade-off' for the large reproductive effort of the female parent, with the male parent building the nest to offload the reproductive burden.
 
 
 ```r
@@ -293,6 +302,8 @@ dataset %>%
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
+Surprisingly, when the female parent incubates, she also tends to be the nest-builder. Perhaps the female is more invested in nest-building since she'll be spending a lot of time there incubating the eggs; thus, the quality and integrity of the nest directly impacts her fitness.
 
 Same concept, different plot:
 
@@ -316,9 +327,10 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
-**3. How does the sex of the nest builder correlate with our continuous variables?**
+#### 3. How does the sex of the nest builder correlate with our continuous variables?**
 
-Nest builder and mean clutch size:
+**Nest-builder vs. Mean Clutch Size**
+We expect the average clutch size to be larger in species with male-nest builders. Again, this would serve as a reproductive trade-off that balances the relative effort of each parent.
 
 
 ```r
@@ -340,8 +352,10 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
+The average clutch size tends to be largest when the female parent is the nest-builder, contrary to the prediction. Again, maybe the parent laying the eggs has more direct concern for nest integrity, especially when there are more eggs in a brood.
 
-Nest builder vs. length breeding season:
+**Nest-builder vs. Length Breeding Season**
+We expect the breeding season to be shortest in species where both parents build the nest. This is because the combined nest-building efforts of both parents can help species overcome the time limitations within a short breeding season.
 
 
 ```r
@@ -363,7 +377,10 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
 
-Nest builder vs. mean breeding latitude:
+We actually see that the breeding season leans to the short-size not when both parents build the nest, but when the female parent builds the nest. Perhaps within a short breeding season, species deal with the time limitations by performing sex-specific task specialization. For example, in many species with short breeding seasons, the female parent builds the nest, while the male parent defends the territory.
+
+**Nest-builder vs. Mean Breeding Latitude**
+We the mean breeding latitude to be higher when both parents build the nest. At higher latitudes, there is more seasonally available food, there may be increased opportunities for both parents to collect materials required for nest-building.
 
 
 ```r
@@ -384,6 +401,8 @@ dataset %>%
 ```
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+
+We end up seeing higher breeding latitudes in species with uni-parental nest-building (female only or male only); the breeding latitude tends to be lower when both parents build the nest. Perhaps this has to do with the negative correlation between breeding latitude and length of the breeding season (see plot in 'More Exploration'); birds that breed at high latitudes tend to have short breeding seasons, and we see shorter breeding seasons when the female parent is the nest builder. This, however, wouldn't explain why we see higher breeding latitudes when the male-parent is the nest builder.
 
 ## More Exploration
 
@@ -524,54 +543,9 @@ na.omit(dataset) %>%
 ## `case_when()` with our Continuous Variables
 
 Another way of exploring the data is using case_when() to make new variables based on our findings. 
+Essentially, here we use the range of each continuous variable to create categories; how each category is defined is relative to all observations under that variable. While these plots help us better interpret some of our predictions (i.e., which parent is most often the nest-builder when breeding seasons are short?), they should be used with caution. Given the small number of male nest-builders in the data, it will be difficult to observe their presence/impact to each category (it will be 'drowned out' by other observations in the data).
 
 **Length Breeding Season:** 
-
-
-```r
-na.omit(dataset) %>% 
-  select(length_breeding) %>% 
-  summarise(min=min(length_breeding),
-            max=max(length_breeding))
-```
-
-```
-## # A tibble: 1 × 2
-##     min   max
-##   <dbl> <dbl>
-## 1     2    12
-```
-
-
-```r
-summary(dataset$length_breeding)
-```
-
-```
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-##   2.000   4.000   5.000   5.431   6.000  12.000      20
-```
-
-
-```r
-dataset %>% 
-  mutate(range_breeding_length=case_when(length_breeding <= 3 ~ "very short",
-                                  length_breeding>3 & length_breeding <= 6  ~ "short",
-                                 length_breeding > 6 & length_breeding <= 9 ~ "medium",
-                                 length_breeding >9 ~ "large")) %>% 
-  filter(nest_builder != "neither") %>%
-  filter(length_breeding != "NA") %>%  
-  ggplot(aes(x=range_breeding_length, fill=nest_builder))+
-  geom_bar(position="dodge", alpha=0.6, color="black")+
-  labs(title="Observations by Breeding Length Range",
-       x="Breeding Length Range",
-       y="Nest Builder")+
-  scale_fill_brewer(palette="YlGnBu")
-```
-
-![](exploratory_data_analysis_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
-
-Alternatively:
 
 
 ```r
@@ -630,35 +604,9 @@ dataset %>%
   scale_fill_brewer(palette = "YlGnBu")
 ```
 
-![](exploratory_data_analysis_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
 
 **Mean Clutch Size:**
-
-
-```r
-dataset <- dataset %>% 
-  mutate(range_clutch_size=case_when(clutch_size_mean <= 3 ~ "very_small",
-                                  clutch_size_mean>3 & clutch_size_mean <= 6  ~ "small",
-                                 clutch_size_mean > 6 & clutch_size_mean <= 9 ~ "medium",
-                                  clutch_size_mean >9 & clutch_size_mean <= 12 ~ "large",
-                                 clutch_size_mean >12 ~ "very_large"))
-
-
-
-dataset %>%
-  filter(nest_builder != "neither") %>%
-  filter(clutch_size_mean != "NA") %>%  
-  ggplot(aes(x=range_clutch_size, fill=nest_builder))+
-  geom_bar(position="dodge", alpha=0.6, color="black")+
-  labs(title="Observations by Clutch Size Range",
-       x="Clutch Size Range",
-       y="Nest Builder")+
-  scale_fill_brewer(palette="YlGnBu")
-```
-
-![](exploratory_data_analysis_files/figure-html/unnamed-chunk-30-1.png)<!-- -->
-
-Alternatively:
 
 
 ```r
@@ -717,7 +665,7 @@ dataset %>%
   scale_fill_brewer(palette = "YlGnBu")
 ```
 
-![](exploratory_data_analysis_files/figure-html/unnamed-chunk-33-1.png)<!-- -->
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
 
 **Mean Breeding Latitude**
 
@@ -778,5 +726,5 @@ dataset %>%
   scale_fill_brewer(palette = "YlGnBu")
 ```
 
-![](exploratory_data_analysis_files/figure-html/unnamed-chunk-36-1.png)<!-- -->
+![](exploratory_data_analysis_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
 
