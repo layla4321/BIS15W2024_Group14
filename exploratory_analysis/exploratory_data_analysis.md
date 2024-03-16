@@ -134,7 +134,7 @@ There appear to be NAs, but are all accurately represented as NAs.
 
 ## Nest building
 
-#### 1. We want to understand the distribution of sexes.** 
+#### 1. We want to understand the distribution of sexes. 
 
 
 ```r
@@ -181,7 +181,7 @@ dataset %>%
 ## 11 Vanellus_spinosus       male
 ```
 
-#### 2. Do other factors have correlations with the sex of the nest builder?**
+#### 2. Do other factors have correlations with the sex of the nest builder?
 
 The paper in which we found the data gives some interesting predictions for nest-building based on other variables in the data. In the paper, they explore these predictions with robust statistical analysis. We want to see if any of these predictions can be observed in our plots.
 
@@ -327,7 +327,7 @@ dataset %>%
 
 ![](exploratory_data_analysis_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
 
-#### 3. How does the sex of the nest builder correlate with our continuous variables?**
+#### 3. How does the sex of the nest builder correlate with our continuous variables?
 
 **Nest-builder vs. Mean Clutch Size**
 We expect the average clutch size to be larger in species with male-nest builders. Again, this would serve as a reproductive trade-off that balances the relative effort of each parent.
